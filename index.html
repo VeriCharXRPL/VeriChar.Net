@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VeriChar – Charity you can verify and trust</title>
+<meta name="description" content="VeriChar is a verification layer for charitable giving on the XRP Ledger. Proof comes before payment. Working prototype; no real donations are processed.">
+<meta name="author" content="Brianne Salato">
+<meta name="theme-color" content="#0a2540">
+<link rel="canonical" href="https://verichar.net/">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a2540;--ink:#eef1f6;--soft:#dbe5f5;--muted:#9fb4d3;--red:#c8102e;--red2:#b00e28;--green:#34e07f;--teal:#19c3b0;--gold:#f3dfa5;--gold2:#c9a45a;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{display:flex;flex-direction:column;background:var(--navy);color:var(--ink);font:400 16px/1.5 'Instrument Sans',system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-text-size-adjust:100%}
+h1,h2,.serif{font-family:'Newsreader',Georgia,serif;font-weight:600}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;padding:8px 14px}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;text-decoration:none}
+.brand img{height:34px;width:auto}
+.brand span{font:600 24px/1 'Newsreader',Georgia,serif}
+.wp{justify-self:start;font-size:13px;color:var(--muted);text-decoration:none}
+.ent{justify-self:end;display:grid;gap:1px;text-align:center;line-height:1.1;padding:6px 11px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2) 55%,#ead398);color:#1b1406;font:600 12px 'Instrument Sans',sans-serif;letter-spacing:.03em;cursor:pointer;box-shadow:0 0 0 3px rgba(243,223,165,.12),0 6px 18px rgba(0,0,0,.35)}
+.ent b{font:600 14px 'Newsreader',Georgia,serif;letter-spacing:0}
+nav{border-bottom:2px solid var(--teal)}
+.tabs{display:flex;gap:2px;overflow-x:auto;padding:2px 10px 2px 8px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;background:none;color:var(--muted);font:500 14px 'Instrument Sans',sans-serif;padding:8px 11px;border-radius:999px;cursor:pointer}
+.r1 .tab{color:var(--soft);font-size:15px;border-radius:0}
+.r1 .tab[aria-current]{color:#fff;box-shadow:inset 0 -2px var(--teal)}
+.r2 .tab[aria-current]{background:var(--red);color:#fff}
+main{flex:1;min-height:0;overflow-y:auto;display:flex;padding:10px 16px}
+.view{margin:auto;width:100%;max-width:640px}
+.view[hidden],[hidden]{display:none!important}
+.hero{text-align:center}
+.hero img{display:block;margin:0 auto;width:auto;max-width:78%;max-height:min(26vh,190px)}
+.tag{margin-top:6px;color:var(--muted);font-size:15px}
+h1{margin:6px 0 8px;font-size:clamp(28px,8.4vw,44px);line-height:1.1}
+.sub{color:var(--soft);font-size:clamp(14px,3.9vw,17px)}
+.sub2{margin-top:4px;color:var(--muted);font-size:clamp(13px,3.6vw,15px)}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
+.cta,.ghost{border-radius:12px;padding:12px 22px;font:600 16px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.cta{border:0;background:var(--red);color:#fff}.cta:hover{background:var(--red2)}
+.ghost{border:1px solid rgba(159,180,211,.5);background:none;color:var(--ink)}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(159,180,211,.22);border-radius:14px;padding:16px}
+.card h2{font-size:26px;line-height:1.15;margin-bottom:8px}
+.card p,.card li{color:var(--soft);font-size:16px}
+.card p+p,.card ol,.card .btns{margin-top:10px}
+.card ol{padding-left:22px}.card li+li{margin-top:6px}
+.card .btns{justify-content:flex-start}
+q{display:block;font:500 clamp(19px,5.4vw,24px)/1.3 'Newsreader',Georgia,serif;color:#fff;quotes:none}
+.by{margin-top:8px;color:var(--muted);font-size:14px}
+.steps{display:flex;gap:8px;margin-bottom:12px}
+.st{width:36px;height:36px;border-radius:50%;border:1px solid var(--muted);background:none;color:var(--soft);font:600 15px 'Instrument Sans',sans-serif;cursor:pointer}
+.st.done{border-color:var(--teal);color:var(--teal)}
+.st[aria-current]{background:var(--teal);border-color:var(--teal);color:#042}
+.chip{display:inline-block;margin-top:10px;padding:3px 12px;border-radius:999px;border:1px solid currentColor;font:600 13px 'Instrument Sans',sans-serif}
+.chip[data-s="0"]{color:var(--muted)}.chip[data-s="1"]{color:var(--gold)}.chip[data-s="2"]{color:#8fb4ff}.chip[data-s="3"]{color:var(--green)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font-size:15px}
+dt{color:var(--muted)}dd{text-align:right}
+.sim{margin-top:10px;color:var(--muted);font-size:13px}
+footer{padding:6px 12px 8px;text-align:center;color:var(--muted);font-size:12px}
+#portal{position:fixed;inset:0;z-index:20;display:flex;padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px);background:radial-gradient(120% 80% at 50% -10%,#14406c,#06172b 62%)}
+#portal[hidden]{display:none}
+.pbox{margin:auto;width:100%;max-width:560px;max-height:100%;overflow-y:auto;padding:18px;border:1px solid rgba(243,223,165,.45);border-radius:18px;background:rgba(6,23,43,.86);box-shadow:0 0 40px rgba(201,164,90,.14)}
+.phead{display:flex;justify-content:space-between;gap:10px}
+.gold{color:var(--gold);font-size:14px}
+.pbox h2{font-size:26px;line-height:1.15;color:var(--gold)}
+#pClose{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid rgba(243,223,165,.5);background:none;color:var(--gold);font-size:16px;cursor:pointer}
+.pm{margin-top:8px;color:var(--soft);font-size:15px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.kpis div{padding:10px 6px;border-top:1px solid rgba(243,223,165,.4);text-align:center}
+.kpis b{display:block;font:600 30px/1.1 'Newsreader',Georgia,serif;color:var(--gold)}
+.kpis span{display:block;font-size:13px;line-height:1.25;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{padding:6px 4px;border-bottom:1px solid rgba(243,223,165,.4);color:var(--muted);font-weight:500;text-align:left}
+td{padding:7px 4px;border-bottom:1px solid rgba(159,180,211,.16);vertical-align:top}
+td small{display:block;color:var(--muted);font-size:12px}
+td:nth-child(2),th:nth-child(2){text-align:right}
+.ok{color:var(--green)}.lk{color:var(--gold)}.pf{color:#8fb4ff}
+.pfoot{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px}
+.gbtn{padding:11px 20px;border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2));color:#1b1406;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none}
+.note{flex:1;min-width:180px;color:var(--muted);font-size:12px}
+@media (max-width:380px){.brand span{font-size:20px}.brand img{height:30px}}
+@media (max-width:340px){header{padding:6px 10px;gap:6px}.brand{gap:6px}.brand span{font-size:18px}.brand img{height:28px}.ent{padding:5px 8px}}
+@media (max-height:640px){.pm{font-size:14px;margin-top:4px}td small{display:none}.card h2{font-size:20px}dl{font-size:14px}header{padding:4px 12px}.tab{padding:6px 10px}main{padding:6px 14px}.hero img{max-height:16vh}h1{font-size:clamp(24px,7.4vw,34px);margin:4px 0 6px}.tag{margin-top:2px}.btns{margin-top:10px}.cta,.ghost{padding:10px 18px;font-size:15px}.card{padding:12px}.card h2{font-size:22px;margin-bottom:6px}.card p,.card li{font-size:15px}.card p+p,.card ol,.card .btns{margin-top:7px}.steps{margin-bottom:8px}.st{width:32px;height:32px}dl{margin-top:6px}.chip{margin-top:6px}.sim{margin-top:6px}footer{padding:3px 10px 5px}.pbox{padding:12px}.pbox h2{font-size:22px}.kpis{margin:8px 0}.kpis b{font-size:24px}td{padding:5px 4px}.pfoot{margin-top:10px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+ <a class="wp" href="verichar-whitepaper-v0.2.pdf">Whitepaper</a>
+ <a class="brand" href="#" data-go="home" aria-label="VeriChar home"><img src="assets/logo-mark.png" alt=""><span>VeriChar</span></a>
+ <button class="ent" id="pOpen" aria-haspopup="dialog">Enterprise<b>Portal</b></button>
+</header>
+<nav aria-label="Sections">
+ <div class="tabs r1">
+  <button class="tab" data-v="who">Who we are</button><button class="tab" data-v="founder">Founder</button><button class="tab" data-v="what">What we do</button><button class="tab" data-v="how">How it works</button><button class="tab" data-v="trans">Transparency</button><button class="tab" data-v="biz">Business model</button>
+ </div>
+ <div class="tabs r2">
+  <button class="tab" data-v="demo">Live Demo</button><button class="tab" data-v="home" aria-current="page">Public Home</button><button class="tab" data-v="verify">Get Verified</button><button class="tab" id="pOpen2">Enterprise Gateway</button>
+ </div>
+</nav>
+<main>
+ <section class="view hero" id="home">
+  <img src="assets/logo-hero.png" alt="VeriChar.net">
+  <p class="tag">Verified Charity On-Chain</p>
+  <h1>Charity you can verify and trust.</h1>
+  <p class="sub">Verified charities. Itemized needs. Funds released only on cryptographic proof of delivery.</p>
+  <p class="sub2">Every step is public, so you never have to take our word for it.</p>
+  <div class="btns"><button class="cta" data-go="demo">Try the live demo</button><button class="ghost" data-go="how">See how it works</button></div>
+ </section>
+ <section class="view" id="demo" hidden>
+  <div class="card">
+   <div class="steps" role="group" aria-label="Demo steps"><button class="st" aria-label="Step 1">1</button><button class="st" aria-label="Step 2">2</button><button class="st" aria-label="Step 3">3</button><button class="st" aria-label="Step 4">4</button></div>
+   <h2 id="dT"></h2><p id="dD"></p><dl id="dR"></dl><span class="chip" id="dS"></span>
+   <div class="btns"><button class="cta" id="dN">Next step</button><a class="ghost" id="dFull" href="demo.html" hidden>Try the full demo</a></div>
+   <p class="sim">Simulated demo. No real funds move.</p>
+  </div>
+ </section>
+ <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>VeriChar (Verified Charity On-Chain) is a verification layer for charitable giving, built on the XRP Ledger.</p><p><b>Our mission.</b> Make every charitable dollar traceable, so people can give with confidence and good organizations can prove their impact.</p><p><b>Our vision.</b> A world where “where did my money go?” always has a clear, checkable answer.</p></div></section>
+ <section class="view" id="founder" hidden><div class="card"><q>“I built VeriChar because real generosity deserves real accountability. Trust should be enforced by code, not demanded by slogans.”</q><p class="by">Brianne Salato, Founder and Product Architect</p><p><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p></div></section>
+ <section class="view" id="what" hidden><div class="card"><h2>What we do</h2><p><b>For donors.</b> Fund one specific, itemized need and watch it move from locked to released.</p><p><b>For charities.</b> Get funded for what you actually need. It’s free, and you never handle the cash.</p><p><b>For vendors.</b> Get paid directly once both proofs are verified.</p></div></section>
+ <section class="view" id="how" hidden><div class="card"><h2>How it works</h2><ol><li>A donor funds one specific need.</li><li>The funds lock in escrow on the XRP Ledger.</li><li>The charity submits an itemized invoice and proof of delivery.</li><li>An oracle verifies both proofs.</li><li>The vendor is paid directly.</li></ol><div class="btns"><button class="cta" data-go="demo">Try the live demo</button></div></div></section>
+ <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations yet. Next comes the XRP Ledger test network with no real funds, then a small pilot after legal and security review.</p><p>Cryptographic proof shows a record is authentic and unaltered. It cannot prove the underlying event was honest. VeriChar makes fraud harder and easier to spot, not impossible.</p><div class="btns"><a class="ghost" href="verichar-whitepaper-v0.2.pdf">Read the whitepaper (v0.2 draft)</a></div></div></section>
+ <section class="view" id="biz" hidden><div class="card"><h2>Business model</h2><p>Free for donors and charities.</p><p>Planned revenue: a 1% vendor settlement fee, and licensing audit-ready CSR data to enterprise customers.</p><p>How the fee is collected at escrow release is still an open design question.</p></div></section>
+ <section class="view" id="verify" hidden><div class="card"><h2>Get verified</h2><ol><li>Register your charity name, wallet address and EIN.</li><li>Your EIN is checked against IRS non-profit records, off the ledger.</li><li>You link your wallet to your website: the account’s Domain field, plus an xrp-ledger.toml file on that domain.</li></ol><p>Free for charities. Registration isn’t open yet. Tell us you’re interested.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Charity%20verification%20interest">Email us</a></div></div></section>
+</main>
+<footer>Prototype · simulated demo · no real donations are processed</footer>
+<div id="portal" hidden role="dialog" aria-modal="true" aria-labelledby="pT">
+ <div class="pbox">
+  <div class="phead"><div><p class="gold">Enterprise Portal · preview</p><h2 id="pT">Corporate impact reporting</h2></div><button id="pClose" aria-label="Close portal">✕</button></div>
+  <p class="pm">Audit-ready records of verified giving, built on a public ledger. Sample data only.</p>
+  <div class="kpis"><div><b>128</b><span>Needs funded</span></div><div><b>119</b><span>Releases verified</span></div><div><b>9</b><span>Awaiting proof</span></div></div>
+  <table><thead><tr><th>Need</th><th>Amount</th><th>State</th></tr></thead><tbody>
+   <tr><td>Water and hygiene kits<small>Northside Shelter</small></td><td>$1,840</td><td class="ok">Released</td></tr>
+   <tr><td>Medical supplies<small>Hope Medical Aid</small></td><td>$5,260</td><td class="lk">Locked</td></tr>
+   <tr><td>Meal vouchers<small>Open Door Services</small></td><td>$1,320</td><td class="ok">Released</td></tr>
+   <tr><td>Infant essentials<small>Family Resource Hub</small></td><td>$760</td><td class="pf">Proof sent</td></tr>
+  </tbody></table>
+  <div class="pfoot"><a class="gbtn" href="mailto:VeriChar@proton.me?subject=Enterprise%20Portal%20access">Request access</a><p class="note">Illustrative sample data. Not certified, and not legal or tax advice.</p></div>
+ </div>
+</div>
+<script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const views=$$('.view'),tabs=$$('.tab[data-v]');
+function show(id){
+ views.forEach(v=>v.hidden=v.id!==id);
+ tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
+ $('main').scrollTop=0;
+}
+$$('[data-v],[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.v||b.dataset.go)}));
+const S=[
+ {t:'A charity lists a need',d:'A verified charity lists one itemized need with a price and a named vendor.',s:'Listed',r:[['Charity','Northside Shelter'],['Need','4 cases of water'],['Price','$20'],['Vendor','Metro Supply Co.']]},
+ {t:'A donor funds it',d:'The gift locks in escrow on the XRP Ledger, with the vendor as the fixed destination.',s:'Locked',r:[['Escrow','$20 locked'],['Destination','Metro Supply Co.'],['No proof in time','Returned to sender']]},
+ {t:'The charity submits proof',d:'The charity sends the itemized invoice and proof of delivery. It never holds the cash.',s:'Proof submitted',r:[['Invoice','Attached'],['Delivery proof','Time-stamped photo']]},
+ {t:'Both proofs verified',d:'The oracle checks both. Only then is the escrow released straight to the vendor.',s:'Released',r:[['Invoice check','Passed'],['Delivery check','Passed'],['Result','$20 paid to vendor']]}
+];
+let i=0;
+function step(n){
+ i=n;const s=S[n];
+ $('#dT').textContent=s.t;$('#dD').textContent=s.d;
+ $('#dR').innerHTML=s.r.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
+ const c=$('#dS');c.textContent=s.s;c.dataset.s=n;
+ $$('.st').forEach((b,k)=>{b.classList.toggle('done',k<n);if(k===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
+ $('#dN').textContent=n<3?'Next step':'Replay demo';$('#dFull').hidden=n<3;
+}
+$('#dN').addEventListener('click',()=>step(i<3?i+1:0));
+$$('.st').forEach((b,k)=>b.addEventListener('click',()=>step(k)));
+step(0);
+const P=$('#portal'),shell=['header','nav','main','footer'].map(s=>$(s));let opener=null;
+function openP(){opener=document.activeElement;shell.forEach(x=>x.inert=true);P.hidden=false;$('#pClose').focus()}
+function closeP(){P.hidden=true;shell.forEach(x=>x.inert=false);if(opener)opener.focus()}
+$('#pOpen').addEventListener('click',openP);$('#pOpen2').addEventListener('click',openP);$('#pClose').addEventListener('click',closeP);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!P.hidden)closeP()});
+})();
+</script>
+</body>
+</html>
