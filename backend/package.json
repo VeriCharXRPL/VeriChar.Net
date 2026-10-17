@@ -1,0 +1,13 @@
+{
+  "name": "verichar-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "five-bells-condition": "^5.0.0",
+    "xrpl": "^4.2.3"
+  }
+}
