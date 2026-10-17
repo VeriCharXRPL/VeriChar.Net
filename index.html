@@ -152,9 +152,7 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 'use strict';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const views=$$('.view'),tabs=$$('.tab[data-v]');
-function show(id)git add index.html demo.html assets
-git commit -m "Add landing page and demo"
-git push{
+function show(id){
  views.forEach(v=>v.hidden=v.id!==id);
  tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
  $('main').scrollTop=0;
@@ -182,7 +180,16 @@ const P=$('#portal'),shell=['header','nav','main','footer'].map(s=>$(s));let ope
 function openP(){opener=document.activeElement;shell.forEach(x=>x.inert=true);P.hidden=false;$('#pClose').focus()}
 function closeP(){P.hidden=true;shell.forEach(x=>x.inert=false);if(opener)opener.focus()}
 $('#pOpen').addEventListener('click',openP);$('#pOpen2').addEventListener('click',openP);$('#pClose').addEventListener('click',closeP);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!P.hidden)closeP()});
+document.addEventListener('keydown',e=>{
+ if(P.hidden)return;
+ if(e.key==='Escape'){closeP();return}
+ if(e.key!=='Tab')return;
+ const focusable=P.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');
+ if(!focusable.length){e.preventDefault();return}
+ const first=focusable[0],last=focusable[focusable.length-1];
+ if(e.shiftKey&&(document.activeElement===first||!P.contains(document.activeElement))){e.preventDefault();last.focus()}
+ else if(!e.shiftKey&&(document.activeElement===last||!P.contains(document.activeElement))){e.preventDefault();first.focus()}
+});
 })();
 </script>
 </body>
