@@ -152,7 +152,9 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 'use strict';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const views=$$('.view'),tabs=$$('.tab[data-v]');
-function show(id){
+function show(id)git add index.html demo.html assets
+git commit -m "Add landing page and demo"
+git push{
  views.forEach(v=>v.hidden=v.id!==id);
  tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
  $('main').scrollTop=0;
