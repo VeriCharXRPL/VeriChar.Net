@@ -7,6 +7,7 @@
 
 module.exports = {
   config: require('./config'),
+  api: require('./api'),
   client: require('./client'),
   condition: require('./condition'),
   escrow: require('./escrow'),

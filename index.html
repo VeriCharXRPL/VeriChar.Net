@@ -8,6 +8,7 @@
 <meta name="author" content="Brianne Salato">
 <meta name="theme-color" content="#0a2540">
 <link rel="canonical" href="https://verichar.net/">
+<meta name="verichar-api-base-url" content="">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,6 +67,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font
 dt{color:var(--muted)}dd{text-align:right}
 .sim{margin-top:10px;color:var(--muted);font-size:13px}
 footer{padding:6px 12px 8px;text-align:center;color:var(--muted);font-size:12px}
+#apiStatus{display:block;margin-top:2px}
 #portal{position:fixed;inset:0;z-index:20;display:flex;padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px);background:radial-gradient(120% 80% at 50% -10%,#14406c,#06172b 62%)}
 #portal[hidden]{display:none}
 .pbox{margin:auto;width:100%;max-width:560px;max-height:100%;overflow-y:auto;padding:18px;border:1px solid rgba(243,223,165,.45);border-radius:18px;background:rgba(6,23,43,.86);box-shadow:0 0 40px rgba(201,164,90,.14)}
@@ -104,35 +106,35 @@ td:nth-child(2),th:nth-child(2){text-align:right}
   <button class="tab" data-v="who">Who we are</button><button class="tab" data-v="founder">Founder</button><button class="tab" data-v="what">What we do</button><button class="tab" data-v="how">How it works</button><button class="tab" data-v="trans">Transparency</button><button class="tab" data-v="biz">Business model</button>
  </div>
  <div class="tabs r2">
-  <button class="tab" data-v="demo">Live Demo</button><button class="tab" data-v="home" aria-current="page">Public Home</button><button class="tab" data-v="verify">Get Verified</button><button class="tab" id="pOpen2">Enterprise Gateway</button>
+  <button class="tab" data-v="demo">Simulation</button><button class="tab" data-v="home" aria-current="page">Public Home</button><button class="tab" data-v="verify">Get Verified</button><button class="tab" id="pOpen2">Enterprise Gateway</button>
  </div>
 </nav>
 <main>
  <section class="view hero" id="home">
   <img src="assets/logo-hero.png" alt="VeriChar.net">
-  <p class="tag">Verified Charity On-Chain</p>
+  <p class="tag">Building accountability for charitable giving on XRPL</p>
   <h1>Charity you can verify and trust.</h1>
   <p class="sub">Verified charities. Itemized needs. Funds released only on cryptographic proof of delivery.</p>
   <p class="sub2">Every step is public, so you never have to take our word for it.</p>
-  <div class="btns"><button class="cta" data-go="demo">Try the live demo</button><button class="ghost" data-go="how">See how it works</button></div>
+  <div class="btns"><button class="cta" data-go="demo">View the simulation</button><button class="ghost" data-go="how">See how it works</button></div>
  </section>
  <section class="view" id="demo" hidden>
   <div class="card">
    <div class="steps" role="group" aria-label="Demo steps"><button class="st" aria-label="Step 1">1</button><button class="st" aria-label="Step 2">2</button><button class="st" aria-label="Step 3">3</button><button class="st" aria-label="Step 4">4</button></div>
    <h2 id="dT"></h2><p id="dD"></p><dl id="dR"></dl><span class="chip" id="dS"></span>
-   <div class="btns"><button class="cta" id="dN">Next step</button><a class="ghost" id="dFull" href="demo.html" hidden>Try the full demo</a></div>
-   <p class="sim">Simulated demo. No real funds move.</p>
+   <div class="btns"><button class="cta" id="dN">Next step</button><a class="ghost" id="dFull" href="demo.html" hidden>Explore the full simulation</a></div>
+   <p class="sim"><strong>Simulation only.</strong> No wallet, XRPL transaction, charity verification, proof upload, or payment occurs.</p>
   </div>
  </section>
  <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>VeriChar (Verified Charity On-Chain) is a verification layer for charitable giving, built on the XRP Ledger.</p><p><b>Our mission.</b> Make every charitable dollar traceable, so people can give with confidence and good organizations can prove their impact.</p><p><b>Our vision.</b> A world where “where did my money go?” always has a clear, checkable answer.</p></div></section>
  <section class="view" id="founder" hidden><div class="card"><q>“I built VeriChar because real generosity deserves real accountability. Trust should be enforced by code, not demanded by slogans.”</q><p class="by">Brianne Salato, Founder and Product Architect</p><p><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p></div></section>
- <section class="view" id="what" hidden><div class="card"><h2>What we do</h2><p><b>For donors.</b> Fund one specific, itemized need and watch it move from locked to released.</p><p><b>For charities.</b> Get funded for what you actually need. It’s free, and you never handle the cash.</p><p><b>For vendors.</b> Get paid directly once both proofs are verified.</p></div></section>
- <section class="view" id="how" hidden><div class="card"><h2>How it works</h2><ol><li>A donor funds one specific need.</li><li>The funds lock in escrow on the XRP Ledger.</li><li>The charity submits an itemized invoice and proof of delivery.</li><li>An oracle verifies both proofs.</li><li>The vendor is paid directly.</li></ol><div class="btns"><button class="cta" data-go="demo">Try the live demo</button></div></div></section>
+ <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>For donors.</b> Choose a specific, itemized need and follow its funding and outcome.</p><p><b>For charities.</b> Apply for verification and, if approved, publish itemized needs. Charity verification and need publishing are not live yet.</p><p><b>For vendors.</b> A proposed workflow would direct funds to vendors after the required review. Vendor payments are not live.</p></div></section>
+ <section class="view" id="how" hidden><div class="card"><h2>How the proposed flow could work</h2><ol><li>A donor chooses one specific need.</li><li>In a future implementation, the donor could fund an XRPL escrow.</li><li>The charity could submit an itemized invoice and delivery evidence for review.</li><li>A reviewer or future verification service would assess the evidence.</li><li>If approved under the final rules, the escrow could be released to the vendor.</li></ol><p class="sim">This is a proposed workflow, not a live service. The simulation below makes no XRPL transactions and verifies no evidence.</p><div class="btns"><button class="cta" data-go="demo">View the simulation</button></div></div></section>
  <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations yet. Next comes the XRP Ledger test network with no real funds, then a small pilot after legal and security review.</p><p>Cryptographic proof shows a record is authentic and unaltered. It cannot prove the underlying event was honest. VeriChar makes fraud harder and easier to spot, not impossible.</p><div class="btns"><a class="ghost" href="verichar-whitepaper-v0.2.pdf">Read the whitepaper (v0.2 draft)</a></div></div></section>
  <section class="view" id="biz" hidden><div class="card"><h2>Business model</h2><p>Free for donors and charities.</p><p>Planned revenue: a 1% vendor settlement fee, and licensing audit-ready CSR data to enterprise customers.</p><p>How the fee is collected at escrow release is still an open design question.</p></div></section>
- <section class="view" id="verify" hidden><div class="card"><h2>Get verified</h2><ol><li>Register your charity name, wallet address and EIN.</li><li>Your EIN is checked against IRS non-profit records, off the ledger.</li><li>You link your wallet to your website: the account’s Domain field, plus an xrp-ledger.toml file on that domain.</li></ol><p>Free for charities. Registration isn’t open yet. Tell us you’re interested.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Charity%20verification%20interest">Email us</a></div></div></section>
+ <section class="view" id="verify" hidden><div class="card"><h2>Charity verification</h2><ol><li>Charities will be able to submit their organization profile and tax identification information for review.</li><li>The verification process and supporting-document requirements are still being designed; no IRS lookup is currently performed by this site.</li><li>Only after a future approval process is implemented should a charity be shown as verified and allowed to publish itemized needs.</li></ol><p>Free for charities. Registration isn’t open yet. Contact us to express interest.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Charity%20verification%20interest">Email us</a></div></div></section>
 </main>
-<footer>Prototype · simulated demo · no real donations are processed</footer>
+<footer>Prototype · simulated demo · no real donations are processed<span id="apiStatus" role="status" aria-live="polite">Checking backend API…</span></footer>
 <div id="portal" hidden role="dialog" aria-modal="true" aria-labelledby="pT">
  <div class="pbox">
   <div class="phead"><div><p class="gold">Enterprise Portal · preview</p><h2 id="pT">Corporate impact reporting</h2></div><button id="pClose" aria-label="Close portal">✕</button></div>
@@ -176,6 +178,33 @@ function step(n){
 $('#dN').addEventListener('click',()=>step(i<3?i+1:0));
 $$('.st').forEach((b,k)=>b.addEventListener('click',()=>step(k)));
 step(0);
+const apiStatus=$('#apiStatus');
+const configuredApiBase=$('meta[name="verichar-api-base-url"]').content.trim();
+if(location.protocol==='file:'&&!configuredApiBase){
+ apiStatus.textContent='Backend status unavailable: serve over HTTP(S) and configure the API URL.';
+}else{
+ const apiBase=configuredApiBase||location.origin;
+ const apiUrl=new URL('/healthz',apiBase);
+ if(!['http:','https:'].includes(apiUrl.protocol)){
+  apiStatus.textContent='Backend status unavailable: API URL must use HTTP(S).';
+ }else{
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),5000);
+  fetch(apiUrl,{headers:{accept:'application/json'},cache:'no-store',credentials:'omit',signal:controller.signal})
+   .then(async response=>{
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    const health=await response.json();
+    if(health.status!=='ok')throw new Error('Unexpected health response');
+    apiStatus.textContent='Backend API: online · Testnet';
+   })
+   .catch(error=>{
+    console.error('Backend health check failed:',error);
+    apiStatus.textContent=error.name==='AbortError'
+     ?'Backend API: unavailable · health check timed out'
+     :'Backend API: unavailable · check API URL and CORS configuration';
+   })
+   .finally(()=>clearTimeout(timeout));
+ }
+}
 const P=$('#portal'),shell=['header','nav','main','footer'].map(s=>$(s));let opener=null;
 function openP(){opener=document.activeElement;shell.forEach(x=>x.inert=true);P.hidden=false;$('#pClose').focus()}
 function closeP(){P.hidden=true;shell.forEach(x=>x.inert=false);if(opener)opener.focus()}
