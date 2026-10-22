@@ -23,9 +23,11 @@ This is **Version 0.7**, a draft. It replaces Version 0.6 for product and busine
 | How VeriChar is funded | 1% vendor fee + enterprise CSR licensing | **Donations to VeriChar** (trackable) + **enterprise SaaS** |
 | Site / demo copy | Mixed older fee language | Aligned with free-for-all + dual revenue paths |
 
-VeriChar is a **working prototype**. The public website and its four-step demonstration are **simulations**. They do not connect a wallet, submit an XRP Ledger transaction, verify a charity, accept a proof upload, or move money. A **Testnet-only API foundation** exists. It does not submit transactions and does not touch Mainnet.
+VeriChar is a **working prototype**. The public website and its four-step demonstration are **simulations**. They do not connect a wallet, submit an XRP Ledger transaction, verify a charity, accept a proof upload, or move money. A **Testnet-only API foundation** exists. The public HTTP API does not submit ledger transactions and does not touch Mainnet.
 
-The flow described in later sections is the **intended design**. It will be tested on the XRP Ledger test network and reviewed by legal and security professionals before any real funds are handled.
+**XRPL Testnet verification (automated).** Backend continuous integration on GitHub Actions runs the full Node test suite against the live **XRP Ledger Testnet**, including faucet-funded wallets, conditional EscrowCreate / EscrowFinish / EscrowCancel (PREIMAGE-SHA-256), fee checks against XRPL.org, vendor balance-change confirmation, and reserve reads. As of **22 October 2026**, those runs complete successfully (for example **37 tests, 0 failures**). Public logs are available under the repository Actions tab. This is **not** Mainnet certification and **not** a claim that the public product processes donations.
+
+The flow described in later sections is the **intended design**. Legal and security review are still required before any real (Mainnet) funds are handled.
 
 Statements about how the XRP Ledger works were checked against XRPL.org documentation and are tagged **[S1]–[S24]** where retained from prior drafts. Design details marked **to be confirmed** are not yet verified against the XRPL specification or production operations.
 
@@ -39,7 +41,8 @@ Statements about how the XRP Ledger works were checked against XRPL.org document
 |---|---|---|
 | **Public site** | Mission, proposed flow, transparency limits, business model, four-step simulation, Enterprise Portal preview | Real donations; charity verification; published needs; proof uploads; vendor payments |
 | **Simulation** | Sample need moves listed → locked → proof submitted → released | Wallet, XRPL transaction, verification, upload, or payment |
-| **Testnet API** | Public `/healthz`; authenticated tenant context; validated Testnet account lookup. Bearer tokens stored only as SHA-256 hashes, bound to one tenant and explicit scopes. Browser is not given a token | Saved tenant data; transaction submission; escrow; oracle; OAuth; Mainnet |
+| **Testnet API** | Public `/healthz`; authenticated tenant context; validated Testnet account lookup. Bearer tokens stored only as SHA-256 hashes, bound to one tenant and explicit scopes. Browser is not given a token | Saved tenant data; product transaction submission; oracle productization; OAuth; Mainnet |
+| **Testnet integration tests (CI)** | Live Testnet: conditional XRP escrow create / finish / cancel; finish fee formula; vendor balance delta; network and account reserves. Runs on every push to `main` | Product UI settlement; RLUSD escrow confirmation; real OCR / delivery oracle |
 | **Charity interest** | Email VeriChar@proton.me. Verification will be **free** when it opens | Open registration; IRS lookup; any organization shown as verified |
 
 Version 0.7 exists so a reader of verichar.net and a reader of this paper see the **same product**.
@@ -221,7 +224,7 @@ Three interfaces are planned: donor experience, charity portal, and enterprise C
 |---|---|---|
 | Charity verification | EIN / registry checks, domain linkage, optional Credentials | Design; email interest only |
 | Need catalog | Itemized needs with vendor and price | Not live |
-| Escrow service | Conditional XRPL escrow create / finish / cancel | Testnet helpers in repo; not productized |
+| Escrow service | Conditional XRPL escrow create / finish / cancel | **Testnet CI passed** for helper module; not productized on the public site |
 | Dual-layer oracle | Invoice + delivery verification; fulfillment custody | Stub only |
 | Donor UI | Fund need, track state | Simulation only |
 | Enterprise SaaS | CSR / impact exports and dashboards | Portal preview (sample data) |
@@ -284,8 +287,8 @@ Cryptography reduces certain classes of error; it does not eliminate human fraud
 
 | Phase | Focus |
 |---|---|
-| **Now** | Honest prototype: simulation, Testnet API foundation, documentation aligned with free-for-all model |
-| **Next** | Testnet end-to-end escrow experiments; measure fees/reserves; RLUSD escrow feasibility; oracle spike with real sample documents |
+| **Now** | Honest prototype: simulation; Testnet API foundation; **automated XRPL Testnet escrow tests passing in CI**; free-for-all model in docs |
+| **Next** | Expand Testnet coverage (fee/reserve measurement at gift sizes); RLUSD escrow feasibility; oracle spike with real sample documents |
 | **Pilot** | Closed pilot after legal and security review; limited charities and vendors; still no broad Mainnet marketing of live giving |
 | **Public giving rails** | Verified charities, itemized needs, escrow + dual proof, free for donors/charities/vendors |
 | **Platform sustainability** | Transparent **donate-to-VeriChar** path; enterprise SaaS generally available |
