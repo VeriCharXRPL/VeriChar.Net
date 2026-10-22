@@ -1,0 +1,73 @@
+name: Whitepaper v0.7 PDF
+
+on:
+  push:
+    paths:
+      - ".github/workflows/wp07-pdf.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pandoc and LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-plain-generic
+
+      - name: Build PDF from Markdown
+        run: |
+          pandoc verichar-whitepaper-v0.7.md \
+            -o verichar-whitepaper-v0.7.pdf \
+            --pdf-engine=xelatex \
+            -V geometry:margin=1in \
+            -V fontsize=11pt \
+            -V colorlinks=true \
+            --toc \
+            -V mainfont="DejaVu Sans" \
+            -V monofont="DejaVu Sans Mono" \
+            || pandoc verichar-whitepaper-v0.7.md \
+            -o verichar-whitepaper-v0.7.pdf \
+            --pdf-engine=pdflatex \
+            -V geometry:margin=1in
+          ls -la verichar-whitepaper-v0.7.pdf
+
+      - name: Point site at PDF only
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+
+          idx = Path('index.html')
+          t = idx.read_text(encoding='utf-8')
+          t = t.replace('verichar-whitepaper-v0.7.md', 'verichar-whitepaper-v0.7.pdf')
+          t = t.replace('verichar-whitepaper-v0.6.pdf', 'verichar-whitepaper-v0.7.pdf')
+          t = t.replace('Read the whitepaper (v0.6 draft)', 'Read the whitepaper (v0.7 draft)')
+          t = t.replace('Read the whitepaper (v0.7 draft)', 'Read the whitepaper (v0.7 draft)')
+          idx.write_text(t, encoding='utf-8')
+
+          readme = Path('README.md')
+          r = readme.read_text(encoding='utf-8')
+          r = r.replace(
+              'The current public draft is [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) (22 October 2026). It matches the live prototype and the free-for-all business model (donations to VeriChar + enterprise SaaS; no 1% fee). PDF versions 0.5 and 0.6 remain in the repository as prior drafts.',
+              'The current public draft is [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) (22 October 2026). Source: [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md). It matches the live prototype and the free-for-all business model (donations to VeriChar + enterprise SaaS; no 1% fee). PDF versions 0.5 and 0.6 remain in the repository as prior drafts.'
+          )
+          if 'verichar-whitepaper-v0.7.pdf' not in r:
+              r = r.replace('verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md)', 'verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf)')
+          readme.write_text(r, encoding='utf-8')
+          print('links updated')
+          PY
+
+      - name: Commit PDF and link updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verichar-whitepaper-v0.7.pdf index.html README.md
+          git commit -m "Add whitepaper v0.7 PDF; single site link to latest" || true
+          rm -f .github/workflows/wp07-pdf.yml
+          git add -A .github/workflows/wp07-pdf.yml
+          git commit -m "Remove one-shot wp07-pdf workflow" || true
+          git push
