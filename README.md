@@ -6,7 +6,7 @@
 
 **Giving network (free):** Donors, charities, and vendors — no settlement take-rate.
 
-**Enterprise SaaS tiers (paid):** Analytics meant to streamline audits and CSR/impact reporting; clearer documentation of giving; less stress and overhead assembling records; exports that can **support** tax and compliance workflows (VeriChar does not file with the IRS for you; not legal or tax advice). Goal: more of each gift reaches the need, with proof that is faster and easier to show.
+**Enterprise SaaS tiers (paid):** Analytics to streamline audits and CSR/impact reporting; **tax compliance workflows** (organized records and exports that support your tax and regulatory documentation); clearer documentation of giving; less stress and overhead. VeriChar does not file with the IRS or other agencies for you; not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show.
 
 **Also:** Donations to VeriChar to fund the public rails.
 
