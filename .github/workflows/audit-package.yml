@@ -1,13 +1,13 @@
 name: Audit package
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - ".github/workflows/audit-package.yml"
-  workflow_dispatch:
 
 jobs:
-  test-and-package:
+  package:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -17,120 +17,47 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: "22"
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
-      - name: Install backend deps
+      - name: Install and test backend (includes XRPL Testnet)
         working-directory: backend
-        run: npm ci
-
-      - name: Run full backend + XRPL Testnet suite
-        working-directory: backend
-        run: npm test
-
-      - name: Debloat demo.html (remove embedded base64 icons)
         run: |
-          python3 << 'PY'
-          from pathlib import Path
-          import re
-          p = Path('demo.html')
-          t = p.read_text(encoding='utf-8')
-          # Replace data-URI icons with on-disk assets (already in repo)
-          t2, n1 = re.subn(
-              r'<link rel="icon" type="image/png" href="data:image/png;base64,[^"]+">',
-              '<link rel="icon" type="image/png" href="assets/favicon.png">',
-              t, count=1)
-          t3, n2 = re.subn(
-              r'<link rel="apple-touch-icon" href="data:image/png;base64,[^"]+">',
-              '<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">',
-              t2, count=1)
-          if n1 != 1 or n2 != 1:
-              raise SystemExit(f'icon replace failed n1={n1} n2={n2}')
-          # Guard: no leftover fee language
-          for bad in ('1% fee', '1% planned', 'settlement fee', 'Vendor settlement'):
-              if bad.lower() in t3.lower():
-                  raise SystemExit(f'forbidden copy still present: {bad}')
-          p.write_text(t3, encoding='utf-8')
-          before = len(t)
-          after = len(t3)
-          print(f'demo.html {before} -> {after} bytes (saved {before-after})')
-          PY
+          npm ci
+          npm test
 
-      - name: Align reserves account_info with api_version 2
-        run: |
-          python3 << 'PY'
-          from pathlib import Path
-          p = Path('backend/src/reserves.js')
-          t = p.read_text(encoding='utf-8')
-          old = """  const info = await client.request({
-    command: 'account_info',
-    account: address,
-    ledger_index: 'validated',
-  });"""
-          new = """  const info = await client.request({
-    command: 'account_info',
-    account: address,
-    ledger_index: 'validated',
-    api_version: 2,
-  });"""
-          if old not in t:
-              print('reserves already aligned or different; skip')
-          else:
-              p.write_text(t.replace(old, new, 1), encoding='utf-8')
-              print('reserves.js api_version 2 added')
-          PY
+      - name: Debloat demo.html icons
+        run: python3 scripts/debloat_demo.py
 
-      - name: Re-run tests after reserves touch
+      - name: Patch reserves api_version
+        run: python3 scripts/patch_reserves.py
+
+      - name: Re-test after patches
         working-directory: backend
         run: npm test
 
-      - name: Build FRONT-END.zip and BACKEND.zip
+      - name: Zip FRONT-END and BACKEND
         run: |
-          mkdir -p packages
-          # Frontend: site surface only (current paper, not historic drafts)
-          zip -r packages/FRONT-END.zip \
-            index.html \
-            demo.html \
-            assets \
-            verichar-whitepaper-v0.7.pdf \
-            verichar-whitepaper-v0.7.md \
-            README.md \
-            -x "*.DS_Store"
-          # Backend: source, tests, lockfile, env example (no node_modules)
-          zip -r packages/BACKEND.zip \
-            backend/package.json \
-            backend/package-lock.json \
-            backend/.env.example \
-            backend/.gitignore \
-            backend/src \
-            backend/tests \
-            API-DESIGN.md \
-            README.md \
-            .github/workflows/backend-tests.yml \
-            -x "*/node_modules/*" -x "*.DS_Store"
+          mkdir -p packages dist
+          zip -r packages/FRONT-END.zip index.html demo.html assets verichar-whitepaper-v0.7.pdf verichar-whitepaper-v0.7.md README.md
+          zip -r packages/BACKEND.zip backend/package.json backend/package-lock.json backend/.env.example backend/.gitignore backend/src backend/tests API-DESIGN.md README.md .github/workflows/backend-tests.yml
+          cp packages/FRONT-END.zip dist/FRONT-END.zip
+          cp packages/BACKEND.zip dist/BACKEND.zip
           ls -la packages/
-          unzip -l packages/FRONT-END.zip | head -40
-          unzip -l packages/BACKEND.zip | head -40
 
-      - name: Commit packages + debloat to main
+      - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          mkdir -p dist
-          cp packages/FRONT-END.zip dist/FRONT-END.zip
-          cp packages/BACKEND.zip dist/BACKEND.zip
           git add demo.html backend/src/reserves.js dist/FRONT-END.zip dist/BACKEND.zip
-          git commit -m "Audit: debloat demo icons, api_version 2 on reserves, package FRONT-END + BACKEND zips" || true
+          git commit -m "Audit: debloat demo, reserves api_version 2, FRONT-END + BACKEND zips" || echo no-change
           rm -f .github/workflows/audit-package.yml
           git add -A .github/workflows/audit-package.yml
-          git commit -m "Remove one-shot audit-package workflow" || true
+          git commit -m "Remove one-shot audit-package workflow" || echo no-wf
           git push
 
-      - name: Upload zip artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: verichar-packages
-          path: |
-            packages/FRONT-END.zip
-            packages/BACKEND.zip
+          path: packages/*.zip
