@@ -6,6 +6,7 @@
 |---|---|
 | Product | VeriChar / VeriChar.Net |
 | Founder | Brianne Salato |
+| Roles | Founder and Product Architect; **XRPL Developer** |
 | Email | VeriChar@proton.me |
 | Website | https://verichar.net |
 | X | https://x.com/VeriCharOnChain |

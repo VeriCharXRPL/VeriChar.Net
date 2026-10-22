@@ -5,28 +5,45 @@ idx = Path("index.html")
 t = idx.read_text(encoding="utf-8")
 seo = Path("assets/seo-head.snippet.html").read_text(encoding="utf-8").strip()
 
-if "application/ld+json" not in t:
+# Replace existing JSON-LD / SEO block if present, else insert after author
+if "application/ld+json" in t:
+    start = t.find('<meta name="robots"')
+    if start == -1:
+        start = t.find('<script type="application/ld+json">')
+    end = t.find("</script>", start)
+    if start != -1 and end != -1:
+        end = end + len("</script>")
+        t = t[:start] + seo + t[end:]
+    else:
+        raise SystemExit("could not locate existing SEO block")
+else:
     needle = '<meta name="author" content="Brianne Salato">'
     if needle not in t:
         raise SystemExit("author meta not found")
     t = t.replace(needle, needle + "\n" + seo, 1)
 
-# Prefer PDF whitepaper links
 t = t.replace('href="verichar-whitepaper-v0.7.md"', 'href="verichar-whitepaper-v0.7.pdf"')
 
-old_founder = (
-    '<p class="by">Brianne Salato, Founder and Product Architect</p>'
+# Normalize founder byline to include XRPL Developer
+for old in [
+    "Brianne Salato, Founder and Product Architect",
+    "Brianne Salato, Founder, Product Architect, and XRPL Developer",
+]:
+    t = t.replace(old, "Brianne Salato, Founder, Product Architect, and XRPL Developer")
+
+old_links = (
     '<p><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br>'
     '<a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p>'
 )
-new_founder = (
-    '<p class="by">Brianne Salato, Founder and Product Architect</p>'
+new_links = (
     '<p><a href="https://verichar.net/">verichar.net</a><br>'
     '<a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br>'
     '<a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p>'
 )
-if old_founder in t:
-    t = t.replace(old_founder, new_founder, 1)
+if old_links in t and "verichar.net/">" not in t[t.find("id=\"founder\""):t.find("id=\"founder\"")+800]:
+    pass
+if old_links in t and 'href="https://verichar.net/"' not in t.split('id="founder"')[1][:600]:
+    t = t.replace(old_links, new_links, 1)
 
 idx.write_text(t, encoding="utf-8")
 print("SEO inject ok")
