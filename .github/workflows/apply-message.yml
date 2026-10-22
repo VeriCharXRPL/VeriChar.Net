@@ -5,7 +5,6 @@ on:
     paths:
       - ".github/workflows/apply-message.yml"
       - "scripts/apply_message.py"
-      - "assets/seo-head.snippet.html"
   workflow_dispatch:
 
 jobs:
@@ -16,55 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 scripts/apply_message.py
-      - name: Refresh SEO from snippet
-        run: |
-          python3 << 'PY'
-          from pathlib import Path
-          t = Path("index.html").read_text(encoding="utf-8")
-          seo = Path("assets/seo-head.snippet.html").read_text(encoding="utf-8").strip()
-          if "application/ld+json" in t:
-              start = t.find('<meta name="robots"')
-              if start == -1:
-                  start = t.find('<script type="application/ld+json">')
-              end = t.find("</script>", start)
-              if start != -1 and end != -1:
-                  t = t[:start] + seo + t[end + len("</script>"):]
-          else:
-              needle = '<meta name="author" content="Brianne Salato">'
-              t = t.replace(needle, needle + "\n" + seo, 1)
-          Path("index.html").write_text(t, encoding="utf-8")
-          print("SEO ok")
-          PY
-      - name: Patch whitepaper business model blurb
-        run: |
-          python3 << 'PY'
-          from pathlib import Path
-          p = Path("verichar-whitepaper-v0.7.md")
-          if not p.exists():
-              raise SystemExit(0)
-          w = p.read_text(encoding="utf-8")
-          w = w.replace(
-              "**Verifiable charity on the XRP Ledger**",
-              "**Verifiable giving on the XRP Ledger**",
-          )
-          old = """### Revenue path B — Enterprise SaaS
-
-Corporate and institutional customers can license tools for **audit-ready CSR and impact reporting** built on verified giving records (and, over time, richer analytics). This is voluntary commercial software, separate from free public giving rails."""
-          new = """### Revenue path B — Enterprise SaaS tiers
-
-Corporate and institutional customers can license **SaaS tiers** for analytics that **streamline audits** and CSR / impact reporting. The product intent is documented giving trails (on-chain when settlement is live), less stress and overhead assembling records, and exportable evidence that can **support** tax and compliance workflows. **VeriChar does not file IRS or other tax returns for customers**; materials are not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show. This is voluntary commercial software, separate from free public giving rails."""
-          if old in w:
-              w = w.replace(old, new, 1)
-              print("wp SaaS section updated")
-          else:
-              print("wp SaaS section pattern miss (may already be updated)")
-          p.write_text(w, encoding="utf-8")
-          PY
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html README.md assets/seo-head.snippet.html verichar-whitepaper-v0.7.md scripts/apply_message.py
+          git add index.html verichar-whitepaper-v0.7.md
           git commit -m "Message: enterprise SaaS tiers, audit analytics, honest tax-support language" || true
           rm -f .github/workflows/apply-message.yml
           git add -A .github/workflows/apply-message.yml
