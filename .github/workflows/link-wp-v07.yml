@@ -1,0 +1,42 @@
+name: Link whitepaper v0.7
+
+on:
+  push:
+    paths:
+      - ".github/workflows/link-wp-v07.yml"
+  workflow_dispatch:
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index links
+        run: |
+          python3 -c "
+          from pathlib import Path
+          p = Path('index.html')
+          t = p.read_text(encoding='utf-8')
+          reps = [
+            ('verichar-whitepaper-v0.6.pdf', 'verichar-whitepaper-v0.7.md'),
+            ('Read the whitepaper (v0.6 draft)', 'Read the whitepaper (v0.7 draft)'),
+          ]
+          for old, new in reps:
+              if old not in t:
+                  raise SystemExit('missing: ' + old)
+              t = t.replace(old, new)
+          p.write_text(t, encoding='utf-8')
+          print('ok')
+          "
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "index.html: link whitepaper v0.7 draft" || true
+          rm -f .github/workflows/link-wp-v07.yml
+          git add -A .github/workflows/link-wp-v07.yml
+          git commit -m "Remove one-shot link-wp-v07 workflow" || true
+          git push
