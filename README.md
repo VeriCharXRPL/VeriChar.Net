@@ -1,7 +1,7 @@
 # VeriChar.Net
 Verifiable charity in dev on the XRP Ledger. Donations lock in escrow and release directly to vendors only after an itemized invoice and cryptographic proof of delivery are verified. Proof comes before payment. Free for donors, charities, and vendors.
 
-The current public draft is [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) (22 October 2026). It matches the live prototype and the free-for-all business model (donations to VeriChar + enterprise SaaS; no 1% fee). PDF versions 0.5 and 0.6 remain in the repository as prior drafts.
+The current public draft is [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) (22 October 2026). Source: [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md). It matches the live prototype and the free-for-all business model (donations to VeriChar + enterprise SaaS; no 1% fee). PDF versions 0.5 and 0.6 remain in the repository as prior drafts.
 
 ## Backend
 
