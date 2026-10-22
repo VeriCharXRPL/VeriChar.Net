@@ -8,7 +8,6 @@
  *
  * UNCONFIRMED (do not invent):
  * - Which account owns each escrow / who pays owner reserve
- * - How 1% vendor fee is collected at release
  * - Token/RLUSD escrow (needs issuer asfAllowTrustLineLocking)
  */
 
