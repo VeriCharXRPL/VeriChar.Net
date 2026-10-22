@@ -1,5 +1,6 @@
 name: Audit package
 
+# One-shot: tests + debloat + zip packages
 on:
   workflow_dispatch:
   push:
