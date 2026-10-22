@@ -1,0 +1,46 @@
+name: Apply public message
+
+on:
+  push:
+    paths:
+      - ".github/workflows/apply-message.yml"
+      - "scripts/apply_message.py"
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/apply_message.py
+      - name: Refresh SEO block from snippet
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+          t = Path("index.html").read_text(encoding="utf-8")
+          seo = Path("assets/seo-head.snippet.html").read_text(encoding="utf-8").strip()
+          if "application/ld+json" in t:
+              start = t.find('<meta name="robots"')
+              if start == -1:
+                  start = t.find('<script type="application/ld+json">')
+              end = t.find("</script>", start)
+              if start != -1 and end != -1:
+                  t = t[:start] + seo + t[end + len("</script>"):]
+          else:
+              needle = '<meta name="author" content="Brianne Salato">'
+              t = t.replace(needle, needle + "\n" + seo, 1)
+          Path("index.html").write_text(t, encoding="utf-8")
+          print("SEO refreshed")
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html README.md assets/seo-head.snippet.html
+          git commit -m "Apply unified message: verifiable giving, proof before payment, honest status" || true
+          rm -f .github/workflows/apply-message.yml
+          git add -A .github/workflows/apply-message.yml
+          git commit -m "Remove one-shot apply-message workflow" || true
+          git push

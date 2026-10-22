@@ -1,7 +1,14 @@
 # VeriChar.Net
-Verifiable charity in dev on the XRP Ledger. Donations lock in escrow and release directly to vendors only after an itemized invoice and cryptographic proof of delivery are verified. Proof comes before payment. Free for donors, charities, and vendors.
 
-The current public draft is [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) (22 October 2026). Source: [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md). It matches the live prototype and the free-for-all business model (donations to VeriChar + enterprise SaaS; no 1% fee). PDF versions 0.5 and 0.6 remain in the repository as prior drafts.
+**Verifiable giving on XRPL.** Charity people can actually verify.
+
+**How:** Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor. Proof before payment.
+
+**Model:** Free for donors, charities, and vendors. Support the build by donating to VeriChar or licensing enterprise SaaS. No settlement take-rate on giving flows.
+
+**Status:** Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
+
+The current public draft is [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) (22 October 2026). Source: [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md). PDF versions 0.5 and 0.6 remain as prior drafts. Public identity notes: [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md).
 
 ## XRPL Testnet verification status
 
@@ -17,21 +24,15 @@ As of **22 October 2026**, those runs complete successfully (**37 tests, 0 failu
 
 ## Backend
 
-The backend targets the XRP Ledger Testnet only. From the repository root, install its dependencies and run the tests with:
+The backend targets the XRP Ledger Testnet only. From the repository root:
 
 ```sh
 cd backend
 npm ci
 npm test
-```
-
-Start the Testnet-only API with:
-
-```sh
-cd backend
 npm start
 ```
 
-Configure `API_TOKENS_JSON` using hashed random bearer tokens as described in [backend/.env.example](./backend/.env.example). The API currently exposes a health check, authenticated tenant context, and Testnet account lookup. It does not yet implement persistent tenant data, product transaction submission, OAuth, or Mainnet support. See [API-DESIGN.md](./API-DESIGN.md) for the recommended architecture and remaining production decisions.
+Configure `API_TOKENS_JSON` using hashed random bearer tokens as described in [backend/.env.example](./backend/.env.example). The API exposes a health check, authenticated tenant context, and Testnet account lookup. It does not yet implement persistent tenant data, product transaction submission, OAuth, or Mainnet support. See [API-DESIGN.md](./API-DESIGN.md).
 
-The public page checks the API's unauthenticated `/healthz` endpoint and shows whether the backend is reachable. It defaults to the same origin; when the page and API are hosted separately, set the `verichar-api-base-url` meta tag in [index.html](./index.html) to the API origin and configure `API_CORS_ORIGINS` with the exact frontend origin. The browser does not receive an API token. Authenticated account lookup remains an API-client operation, and the donation demo remains simulated.
+The public page checks `/healthz` and shows whether the backend is reachable. Set `verichar-api-base-url` in [index.html](./index.html) when the API is on another origin, and configure `API_CORS_ORIGINS`. The browser does not receive an API token. The donation demo remains simulated.
