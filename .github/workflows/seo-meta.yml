@@ -1,9 +1,10 @@
-name: SEO meta
+name: Inject SEO into index
 
 on:
   push:
     paths:
       - ".github/workflows/seo-meta.yml"
+      - "assets/seo-head.snippet.html"
   workflow_dispatch:
 
 jobs:
@@ -13,194 +14,31 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Inject SEO head + founder contact + robots + toml stub
+      - name: Inject snippet after author meta
         run: |
-          python3 << 'PY'
-          from pathlib import Path
-
-          seo = '''
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="keywords" content="VeriChar, VeriChar.net, Brianne Salato, charity transparency, XRP Ledger, XRPL, escrow, verified charity, RLUSD, proof of delivery">
-<meta name="creator" content="Brianne Salato">
-<meta name="publisher" content="VeriChar">
-<meta name="contact" content="VeriChar@proton.me">
-<meta name="application-name" content="VeriChar">
-<link rel="me" href="https://x.com/VeriCharOnChain">
-<link rel="me" href="mailto:VeriChar@proton.me">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="VeriChar">
-<meta property="og:title" content="VeriChar – Charity you can verify and trust">
-<meta property="og:description" content="Verification layer for charitable giving on the XRP Ledger. Free for donors, charities, and vendors. Proof comes before payment. Founded by Brianne Salato.">
-<meta property="og:url" content="https://verichar.net/">
-<meta property="og:image" content="https://verichar.net/assets/logo-hero.png">
-<meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@VeriCharOnChain">
-<meta name="twitter:creator" content="@VeriCharOnChain">
-<meta name="twitter:title" content="VeriChar – Charity you can verify and trust">
-<meta name="twitter:description" content="Verification layer for charitable giving on the XRP Ledger. Free for donors, charities, and vendors. Founded by Brianne Salato.">
-<meta name="twitter:image" content="https://verichar.net/assets/logo-hero.png">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://verichar.net/#organization",
-      "name": "VeriChar",
-      "alternateName": ["Verified Charity On-Chain", "VeriChar.Net"],
-      "url": "https://verichar.net/",
-      "email": "VeriChar@proton.me",
-      "logo": "https://verichar.net/assets/logo-mark.png",
-      "image": "https://verichar.net/assets/logo-hero.png",
-      "description": "Verification layer for charitable giving on the XRP Ledger. Proof comes before payment.",
-      "founder": {"@id": "https://verichar.net/#founder"},
-      "sameAs": ["https://x.com/VeriCharOnChain", "https://github.com/VeriCharXRPL/VeriChar.Net"]
-    },
-    {
-      "@type": "Person",
-      "@id": "https://verichar.net/#founder",
-      "name": "Brianne Salato",
-      "jobTitle": "Founder and Product Architect",
-      "email": "VeriChar@proton.me",
-      "url": "https://verichar.net/",
-      "sameAs": ["https://x.com/VeriCharOnChain"],
-      "worksFor": {"@id": "https://verichar.net/#organization"}
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://verichar.net/#website",
-      "url": "https://verichar.net/",
-      "name": "VeriChar",
-      "description": "Charity you can verify and trust on the XRP Ledger.",
-      "publisher": {"@id": "https://verichar.net/#organization"},
-      "inLanguage": "en-US"
-    }
-  ]
-}
-</script>
-'''.strip()
-
-          idx = Path('index.html')
-          t = idx.read_text(encoding='utf-8')
-          if 'application/ld+json' in t:
-              print('SEO already present')
-          else:
-              needle = '<meta name="author" content="Brianne Salato">'
-              if needle not in t:
-                  raise SystemExit('author meta not found')
-              t = t.replace(needle, needle + '\n' + seo, 1)
-
-          old_founder = '<p class="by">Brianne Salato, Founder and Product Architect</p><p><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p>'
-          new_founder = '<p class="by">Brianne Salato, Founder and Product Architect</p><p><a href="https://verichar.net/">verichar.net</a><br><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p>'
-          if old_founder in t:
-              t = t.replace(old_founder, new_founder, 1)
-
-          idx.write_text(t, encoding='utf-8')
-          print('index.html SEO updated')
-
-          robots = Path('robots.txt')
-          robots.write_text(
-              'User-agent: *\nAllow: /\n\nSitemap: https://verichar.net/sitemap.xml\n',
-              encoding='utf-8',
-          )
-
-          sitemap = Path('sitemap.xml')
-          sitemap.write_text(
-              '''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://verichar.net/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://verichar.net/verichar-whitepaper-v0.7.pdf</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://verichar.net/demo.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-</urlset>
-''',
-              encoding='utf-8',
-          )
-
-          # XRPL domain verification template (fill ACCOUNT when Mainnet/Testnet account is chosen)
-          Path('.well-known').mkdir(exist_ok=True)
-          Path('.well-known/xrp-ledger.toml').write_text(
-              '''# XRPL domain association for verichar.net
-# Spec: https://xrpl.org/docs/references/xrp-ledger-toml
-# After creating an account, set Domain to verichar.net on-ledger and list the address below.
-
-[METADATA]
-modified = "2026-10-22T00:00:00.000Z"
-
-[[ACCOUNTS]]
-# address = "rXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-# network = "main"   # or "testnet"
-# desc = "VeriChar platform / operations account"
-
-[[VALIDATORS]]
-# none operated by VeriChar today
-
-[PRINCIPALS]
-name = "Brianne Salato"
-email = "VeriChar@proton.me"
-
-[ORGANIZATION]
-name = "VeriChar"
-domain = "verichar.net"
-''',
-              encoding='utf-8',
-          )
-
-          # Public identity note: no EIN in repo (sole proprietor tax ID stays off public pages)
-          Path('PUBLIC-IDENTITY.md').write_text(
-              '''# Public identity (SEO and XRPL)
-
-## Published on purpose
-
-| Field | Value |
-|---|---|
-| Product | VeriChar / VeriChar.Net |
-| Founder | Brianne Salato |
-| Email | VeriChar@proton.me |
-| Website | https://verichar.net |
-| X | https://x.com/VeriCharOnChain |
-| Code | https://github.com/VeriCharXRPL/VeriChar.Net |
-
-These appear in HTML meta tags, Open Graph / Twitter cards, JSON-LD (`schema.org`), the founder section, and `.well-known/xrp-ledger.toml` principals.
-
-## Not published on the website
-
-**Employer Identification Number (EIN)** and IRS confirmation details are **not** placed in public HTML, SEO meta, or this repository.
-
-- VeriChar is currently associated with a **sole proprietorship** legal name for tax setup.
-- An EIN is for banks, processors, tax forms, and secure vendor onboarding — not for SEO ranking.
-- Charities that later join VeriChar may disclose *their* nonprofit EINs in verification flows as product design allows; that is separate from publishing the founder’s sole-proprietor EIN in page source.
-
-Store the EIN offline (password manager / counsel). Share it only through secure channels when a counterparty legitimately needs it.
-
-## XRPL identifiers
-
-Domain linkage uses `https://verichar.net/.well-known/xrp-ledger.toml` plus the account `Domain` field set to `verichar.net`. Add the r-address under `[[ACCOUNTS]]` once the operational wallet exists. EIN is **not** an on-ledger field.
-''',
-              encoding='utf-8',
-          )
-          print('robots, sitemap, toml, PUBLIC-IDENTITY written')
-          PY
-
-      - name: Commit
+          python3 -c "
+from pathlib import Path
+idx = Path('index.html')
+t = idx.read_text(encoding='utf-8')
+seo = Path('assets/seo-head.snippet.html').read_text(encoding='utf-8').strip()
+if 'application/ld+json' not in t:
+    needle = '<meta name=\"author\" content=\"Brianne Salato\">'
+    assert needle in t
+    t = t.replace(needle, needle + chr(10) + seo, 1)
+old = '<p class=\"by\">Brianne Salato, Founder and Product Architect</p><p><a href=\"https://x.com/VeriCharOnChain\">@VeriCharOnChain on X</a><br><a href=\"mailto:VeriChar@proton.me\">VeriChar@proton.me</a></p>'
+new = '<p class=\"by\">Brianne Salato, Founder and Product Architect</p><p><a href=\"https://verichar.net/\">verichar.net</a><br><a href=\"https://x.com/VeriCharOnChain\">@VeriCharOnChain on X</a><br><a href=\"mailto:VeriChar@proton.me\">VeriChar@proton.me</a></p>'
+if old in t:
+    t = t.replace(old, new, 1)
+idx.write_text(t, encoding='utf-8')
+print('ok')
+"
+      - name: Commit and cleanup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html robots.txt sitemap.xml .well-known/xrp-ledger.toml PUBLIC-IDENTITY.md
-          git commit -m "SEO and public identity metadata (name, email, site, X); no public EIN" || true
+          git add index.html
+          git commit -m "Inject SEO and schema.org identity into index.html" || true
           rm -f .github/workflows/seo-meta.yml
           git add -A .github/workflows/seo-meta.yml
-          git commit -m "Remove one-shot seo-meta workflow" || true
+          git commit -m "Remove one-shot seo inject workflow" || true
           git push
