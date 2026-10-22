@@ -1,9 +1,11 @@
 name: Fix commercial model copy
+
 on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/fix-copy-once.yml'
+      - ".github/workflows/fix-copy-once.yml"
+
 jobs:
   fix:
     runs-on: ubuntu-latest
@@ -11,47 +13,49 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Update demo.html business model
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Patch demo.html
         run: |
-          python3 << 'PY'
+          set -euo pipefail
+          python3 -c "
           from pathlib import Path
           p = Path('demo.html')
           t = p.read_text(encoding='utf-8')
-          old1 = '''    <div><div class="text-sm font-semibold">Vendor settlement fee</div><p class="text-sm mute mt-1">A 1% fee on the vendor payout is planned, treated as a standard business-to-business acquisition cost for vendors winning high-volume, automated orders. How it is collected at escrow release is still an open design question.</p></div>
-    <div><div class="text-sm font-semibold">CSR dashboard licensing</div><p class="text-sm mute mt-1">Large corporate brands can subscribe to an enterprise tier to access automated, audit-ready Corporate Social Responsibility (CSR) data logs generated safely by our off-chain encryption layers.</p></div>'''
-          new1 = '''    <div><div class="text-sm font-semibold">Donate to VeriChar</div><p class="text-sm mute mt-1">People can support the platform by donating to VeriChar itself and track almost every dollar. Free for donors, charities, and vendors — no settlement fees on giving flows.</p></div>
-    <div><div class="text-sm font-semibold">Enterprise SaaS</div><p class="text-sm mute mt-1">Large corporate brands can subscribe to an enterprise tier for automated, audit-ready Corporate Social Responsibility (CSR) and impact reporting.</p></div>'''
-          old2 = '<span class="badge b-go">Donors: 0%</span><span class="badge b-go">Charities: 0%</span><span class="badge b-lock">Vendors: 1% planned fee</span><span class="badge b-lock">Brands: enterprise CSR tier</span>'
-          new2 = '<span class="badge b-go">Donors: free</span><span class="badge b-go">Charities: free</span><span class="badge b-go">Vendors: free</span><span class="badge b-lock">Brands: enterprise SaaS</span>'
-          old3 = '<p class="text-xs mt-2 mute">The planned vendor fee is not implemented or collected.</p>'
-          new3 = '<p class="text-xs mt-2 mute">No vendor fee — free for donors, charities, and vendors.</p>'
-          for old, new in ((old1, new1), (old2, new2), (old3, new3)):
+          reps = [
+          ('Vendor settlement fee', 'Donate to VeriChar'),
+          ('A 1% fee on the vendor payout is planned, treated as a standard business-to-business acquisition cost for vendors winning high-volume, automated orders. How it is collected at escrow release is still an open design question.', 'People can support the platform by donating to VeriChar itself and track almost every dollar. Free for donors, charities, and vendors with no settlement fees on giving flows.'),
+          ('CSR dashboard licensing', 'Enterprise SaaS'),
+          ('Large corporate brands can subscribe to an enterprise tier to access automated, audit-ready Corporate Social Responsibility (CSR) data logs generated safely by our off-chain encryption layers.', 'Large corporate brands can subscribe to an enterprise tier for automated, audit-ready CSR and impact reporting.'),
+          ('Donors: 0%', 'Donors: free'),
+          ('Charities: 0%', 'Charities: free'),
+          ('Vendors: 1% planned fee', 'Vendors: free'),
+          ('Brands: enterprise CSR tier', 'Brands: enterprise SaaS'),
+          ('The planned vendor fee is not implemented or collected.', 'No vendor fee. Free for donors, charities, and vendors.'),
+          ]
+          for old, new in reps:
               if old not in t:
-                  raise SystemExit(f'Missing expected text block')
+                  raise SystemExit('Missing: ' + old[:60])
               t = t.replace(old, new, 1)
           p.write_text(t, encoding='utf-8')
-          print('demo.html updated')
-          PY
-      - name: Commit if changed
+          print('ok')
+          "
+
+      - name: Commit and push
         run: |
-          git config user.name "VeriCharXRPL"
-          git config user.email "bbxrp15@gmail.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add demo.html
           if git diff --staged --quiet; then
-            echo "No changes"
+            echo "no demo changes"
           else
             git commit -m "demo.html: free for donors, charities, and vendors; no 1% fee"
             git push
           fi
-      - name: Remove one-shot workflow
-        run: |
-          git config user.name "VeriCharXRPL"
-          git config user.email "bbxrp15@gmail.com"
           rm -f .github/workflows/fix-copy-once.yml
-          git add .github/workflows/fix-copy-once.yml
-          if git diff --staged --quiet; then
-            echo "Workflow already gone"
-          else
+          git add -A .github/workflows/fix-copy-once.yml
+          if ! git diff --staged --quiet; then
             git commit -m "Remove one-shot fix-copy workflow"
             git push
           fi
