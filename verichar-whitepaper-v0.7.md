@@ -1,7 +1,7 @@
 # VeriChar Whitepaper
 
-**Verifiable charity on the XRP Ledger**  
-*Proof comes before payment.*
+**Verifiable giving on the XRP Ledger**  
+*Proof before payment. Encoded transparency for charity.*
 
 **Brianne Salato**  
 Founder and Product Architect
@@ -94,7 +94,7 @@ VeriChar is **free for donors, charities, and vendors**. There is **no settlemen
 1. **Donations to VeriChar itself** — people can support the platform and, as the system matures, **track almost every dollar** of platform funding with the same transparency principles applied to charity flows.  
 2. **Enterprise SaaS** — licensing of audit-ready CSR / impact reporting tools to corporate customers.
 
-**Core principle.** Proof comes before payment, not after. Trust should be enforced by code, not demanded by slogans. The code that would enforce full settlement is not finished. Until it is, the public demonstration says so on the screen.
+**Core principle.** Proof before payment. **Product:** verifiable giving on XRPL. **Method:** lock funds until invoice and proof of delivery check out, then pay the vendor. The code that would enforce full settlement is not finished. Until it is, the public demonstration says so on the screen.
 
 ---
 
