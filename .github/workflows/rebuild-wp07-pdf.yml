@@ -1,0 +1,54 @@
+name: Rebuild whitepaper v0.7 PDF
+
+on:
+  push:
+    paths:
+      - ".github/workflows/rebuild-wp07-pdf.yml"
+  workflow_dispatch:
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pandoc and LaTeX
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            pandoc \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-plain-generic \
+            lmodern
+
+      - name: Build PDF from Markdown
+        run: |
+          pandoc verichar-whitepaper-v0.7.md \
+            -o verichar-whitepaper-v0.7.pdf \
+            --pdf-engine=xelatex \
+            -V geometry:margin=1in \
+            -V fontsize=11pt \
+            -V colorlinks=true \
+            -V linkcolor=blue \
+            -V urlcolor=blue \
+            --toc \
+            --toc-depth=2 \
+            -f gfm \
+            -t pdf
+          ls -la verichar-whitepaper-v0.7.pdf
+          file verichar-whitepaper-v0.7.pdf
+
+      - name: Commit PDF and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verichar-whitepaper-v0.7.pdf
+          git commit -m "Rebuild whitepaper v0.7 PDF from Markdown (Testnet CI status included)" || true
+          rm -f .github/workflows/rebuild-wp07-pdf.yml
+          git add -A .github/workflows/rebuild-wp07-pdf.yml
+          git commit -m "Remove one-shot rebuild-wp07-pdf workflow" || true
+          git push
