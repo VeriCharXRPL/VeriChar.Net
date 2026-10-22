@@ -173,11 +173,11 @@ select{border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem;font-s
    <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="font-semibold">6. Proposed commercial model</h3><span class="badge b-lock">Not implemented</span></div>
     <p class="mute text-sm mt-1">These are business concepts, not current product features or charges.</p>
    <div class="grid gap-3 md:grid-cols-2 mt-3">
-    <div><div class="text-sm font-semibold">Vendor settlement fee</div><p class="text-sm mute mt-1">A 1% fee on the vendor payout is planned, treated as a standard business-to-business acquisition cost for vendors winning high-volume, automated orders. How it is collected at escrow release is still an open design question.</p></div>
-    <div><div class="text-sm font-semibold">CSR dashboard licensing</div><p class="text-sm mute mt-1">Large corporate brands can subscribe to an enterprise tier to access automated, audit-ready Corporate Social Responsibility (CSR) data logs generated safely by our off-chain encryption layers.</p></div>
+    <div><div class="text-sm font-semibold">Donate to VeriChar</div><p class="text-sm mute mt-1">People can support the platform by donating to VeriChar itself and track almost every dollar. Free for donors, charities, and vendors with no settlement fees on giving flows.</p></div>
+    <div><div class="text-sm font-semibold">Enterprise SaaS</div><p class="text-sm mute mt-1">Large corporate brands can subscribe to an enterprise tier for automated, audit-ready CSR and impact reporting.</p></div>
    </div>
    <div class="flex flex-wrap items-center gap-2 mt-4 text-xs">
-    <span class="badge b-go">Donors: 0%</span><span class="badge b-go">Charities: 0%</span><span class="badge b-lock">Vendors: 1% planned fee</span><span class="badge b-lock">Brands: enterprise CSR tier</span>
+    <span class="badge b-go">Donors: free</span><span class="badge b-go">Charities: free</span><span class="badge b-lock">Vendors: free</span><span class="badge b-lock">Brands: enterprise SaaS</span>
    </div>
   </div>
   <div class="card mt-3 p-4" style="border-left:4px solid var(--blue)">
@@ -251,7 +251,7 @@ function renderProof(){
    <div class="text-sm font-semibold mt-2" style="color:var(--ok)">Simulated proof checks — not verified</div>
    <p class="text-sm mt-1">This is an animated example only. No escrow condition was checked and no funds were released.</p>
    <p class="text-xs mt-2" style="color:var(--go)">${fmt(n.cost)} shown for ${n.vendor}; no payment occurred.</p><p class="mute text-xs mt-1">${n.title}</p><div class="hash mt-1">Simulated payout ID: ${n.relHash}</div>
-   <p class="text-xs mt-2 mute">The planned vendor fee is not implemented or collected.</p></div>`;
+   <p class="text-xs mt-2 mute">No vendor fee. Free for donors, charities, and vendors.</p></div>`;
   const up=(k,label,done,sub)=>{const run=(n.run||{})[k],isA=k==="inv",
    file=isA?"sample_invoice_"+n.id+".pdf":"sample_delivery_photo_"+n.id+".jpg",
    msg=isA?"Simulated invoice review...":"Simulated delivery-proof review...";
