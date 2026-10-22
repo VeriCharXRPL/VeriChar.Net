@@ -244,9 +244,9 @@ Network participants still face **XRPL network costs** (XRP fees and reserves) w
 
 People and organizations who want the transparency layer to exist can **donate to VeriChar itself**. As capabilities mature, platform funding should be as inspectable as charity funding: **track almost every dollar** of operating support with public or exportable records. Supporting VeriChar is participation in the **charity transparency** effort, not a purchase of investment securities.
 
-### Revenue path B — Enterprise SaaS
+### Revenue path B — Enterprise SaaS tiers
 
-Corporate and institutional customers can license tools for **audit-ready CSR and impact reporting** built on verified giving records (and, over time, richer analytics). This is voluntary commercial software, separate from free public giving rails.
+Corporate and institutional customers can license **SaaS tiers** for analytics that **streamline audits** and CSR / impact reporting. The product intent is documented giving trails (on-chain when settlement is live), less stress and overhead assembling records, and exportable evidence that can **support** tax and compliance workflows. **VeriChar does not file IRS or other tax returns for customers**; materials are not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show. This is voluntary commercial software, separate from free public giving rails.
 
 ### What is explicitly rejected
 
