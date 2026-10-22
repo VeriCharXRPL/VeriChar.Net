@@ -54,6 +54,7 @@ async function getAccountReserveInfo(client, address) {
     command: 'account_info',
     account: address,
     ledger_index: 'validated',
+    api_version: 2,
   });
 
   const accountData = info.result.account_data;
