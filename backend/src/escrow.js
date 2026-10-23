@@ -25,9 +25,9 @@ const { submitTransaction } = require('./transactions');
  * @param {object} opts
  * @param {string} opts.destination - vendor address (fixed Destination)
  * @param {string} opts.amountDrops - XRP amount in drops (string)
- * @param {number} opts.cancelAfterSeconds - seconds from now until CancelAfter
- * @param {string} [opts.condition] - optional pre-generated condition hex
- * @param {string} [opts.fulfillment] - optional pre-generated fulfillment
+ * @param {number} opts.cancelAfterSeconds - positive safe integer seconds until CancelAfter
+ * @param {string} [opts.condition] - pre-generated condition hex; must be paired with fulfillment
+ * @param {string} [opts.fulfillment] - pre-generated fulfillment; must be paired with condition
  * @returns {Promise<{
  *   result: object,
  *   sequence: number,
@@ -52,23 +52,33 @@ async function createConditionalEscrow(client, senderWallet, opts) {
   if (!amountDrops || !/^\d+$/.test(String(amountDrops)) || BigInt(amountDrops) <= 0n) {
     throw new Error('amountDrops must be a positive integer string');
   }
-  if (!cancelAfterSeconds || cancelAfterSeconds < 1) {
-    throw new Error('cancelAfterSeconds must be >= 1 (every escrow needs CancelAfter)');
+  if (!Number.isSafeInteger(cancelAfterSeconds) || cancelAfterSeconds < 1) {
+    throw new Error('cancelAfterSeconds must be a positive safe integer');
   }
 
   let condition = providedCondition;
   let fulfillment = providedFulfillment;
 
-  if (!condition || !fulfillment) {
+  if (condition === undefined && fulfillment === undefined) {
     const pair = generateConditionPair();
     condition = pair.condition;
     fulfillment = pair.fulfillment;
-  } else if (!validateFulfillment(fulfillment, condition)) {
-    throw new Error('provided fulfillment does not match condition');
+  } else {
+    if (condition === undefined || fulfillment === undefined) {
+      throw new Error('condition and fulfillment must be provided together');
+    }
+    if (!validateFulfillment(fulfillment, condition)) {
+      throw new Error('provided fulfillment does not match condition');
+    }
   }
 
+  const now = new Date();
+  const nowRippleTime = xrpl.isoTimeToRippleTime(now.toISOString());
+  if (cancelAfterSeconds > 0xFFFFFFFF - nowRippleTime) {
+    throw new Error('cancelAfterSeconds exceeds the XRPL CancelAfter range');
+  }
   const cancelAfter = xrpl.isoTimeToRippleTime(
-    new Date(Date.now() + cancelAfterSeconds * 1000).toISOString()
+    new Date(now.getTime() + cancelAfterSeconds * 1000).toISOString()
   );
 
   const tx = {

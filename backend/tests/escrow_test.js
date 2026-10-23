@@ -31,6 +31,40 @@ describe('createConditionalEscrow validation', () => {
       /amountDrops/
     );
   });
+
+  it('rejects incomplete condition and fulfillment pairs', async () => {
+    await assert.rejects(
+      createConditionalEscrow(null, { address: 'rDummy' }, {
+        destination: 'rVendor',
+        amountDrops: '1000',
+        cancelAfterSeconds: 60,
+        condition: 'AA',
+      }),
+      /condition and fulfillment must be provided together/
+    );
+  });
+
+  it('requires an integer CancelAfter duration', async () => {
+    await assert.rejects(
+      createConditionalEscrow(null, { address: 'rDummy' }, {
+        destination: 'rVendor',
+        amountDrops: '1000',
+        cancelAfterSeconds: 1.5,
+      }),
+      /cancelAfterSeconds/
+    );
+  });
+
+  it('rejects CancelAfter values outside the XRPL UInt32 range', async () => {
+    await assert.rejects(
+      createConditionalEscrow(null, { address: 'rDummy' }, {
+        destination: 'rVendor',
+        amountDrops: '1000',
+        cancelAfterSeconds: Number.MAX_SAFE_INTEGER,
+      }),
+      /XRPL CancelAfter range/
+    );
+  });
 });
 
 describe('escrow (testnet)', () => {
