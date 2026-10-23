@@ -2,12 +2,68 @@
 
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { connectClient, fundWallet } = require('../src/client');
+const { connectClient, fundWallet, xrpl } = require('../src/client');
 const {
+  fundReserves,
   getNetworkReserves,
   getAccountReserveInfo,
   checkReserveRequirement,
 } = require('../src/reserves');
+const { vericharMemo } = require('../src/memo');
+
+describe('fundReserves', () => {
+  it('attaches a VeriChar memo to the payment', async () => {
+    const sourceWallet = { address: 'r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59' };
+    let submitted;
+    const client = {
+      submitAndWait: async (transaction, options) => {
+        submitted = transaction;
+        assert.equal(options.wallet, sourceWallet);
+        return { result: { meta: { TransactionResult: 'tesSUCCESS' } } };
+      },
+    };
+
+    await fundReserves(
+      client,
+      sourceWallet,
+      'r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59',
+      '1000'
+    );
+
+    xrpl.validate(submitted);
+    assert.deepEqual(submitted.Memos, vericharMemo());
+  });
+});
+
+describe('getNetworkReserves', () => {
+  it('requests current validated-ledger reserve data', async () => {
+    let request;
+    const reserves = await getNetworkReserves({
+      request: async (params) => {
+        request = params;
+        return {
+          result: {
+            state: {
+              validated_ledger: {
+                reserve_base: 10000000,
+                reserve_inc: 2000000,
+              },
+            },
+          },
+        };
+      },
+    });
+
+    assert.deepEqual(request, {
+      command: 'server_state',
+      ledger_index: 'current',
+    });
+    assert.deepEqual(reserves, {
+      baseReserveDrops: '10000000',
+      ownerReserveDrops: '2000000',
+    });
+  });
+});
 
 describe('reserves (testnet)', () => {
   let client;

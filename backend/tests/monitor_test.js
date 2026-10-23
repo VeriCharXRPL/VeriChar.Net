@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const {
   extractDeliveredAmount,
   isSuccessfulValidated,
+  watchAccount,
 } = require('../src/monitor');
 
 describe('monitor', () => {
@@ -72,5 +73,21 @@ describe('monitor', () => {
     };
     assert.equal(extractDeliveredAmount(tx).validated, false);
     assert.equal(isSuccessfulValidated(tx), false);
+  });
+
+  it('surfaces unsubscribe failures while the client is connected', async () => {
+    const client = {
+      isConnected: () => true,
+      on() {},
+      off() {},
+      request: async ({ command }) => {
+        if (command === 'unsubscribe') {
+          throw new Error('unsubscribe failed');
+        }
+      },
+    };
+    const subscription = await watchAccount(client, 'rAccount', () => {});
+
+    await assert.rejects(subscription.unsubscribe(), /unsubscribe failed/);
   });
 });

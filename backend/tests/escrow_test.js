@@ -7,22 +7,17 @@ const {
   createConditionalEscrow,
   finishEscrow,
   cancelEscrow,
-  escrowFinishFeeDrops,
 } = require('../src/escrow');
 const { validateFulfillment } = require('../src/condition');
+const { vericharMemo } = require('../src/memo');
 const {
   extractDeliveredAmount,
   vendorBalanceDeltaFromEscrowFinish,
 } = require('../src/monitor');
 
-describe('escrowFinishFeeDrops', () => {
-  it('matches xrpl.org formula: 330 + 10 * floor(bytes/16)', () => {
-    // 32 hex chars = 16 bytes → 330 + 10*1 = 340
-    assert.equal(escrowFinishFeeDrops('A'.repeat(32)), '340');
-    // 64 hex chars = 32 bytes → 330 + 10*2 = 350
-    assert.equal(escrowFinishFeeDrops('A'.repeat(64)), '350');
-  });
-});
+function assertVericharMemo(txResult) {
+  assert.deepEqual(txResult.tx_json.Memos, vericharMemo());
+}
 
 describe('createConditionalEscrow validation', () => {
   it('rejects amountDrops of "0"', async () => {
@@ -64,6 +59,7 @@ describe('escrow (testnet)', () => {
       amountDrops: '10000',
       cancelAfterSeconds: 120,
     });
+    assertVericharMemo(created.result);
     // Ripple epoch starts 2000-01-01; value must be far below Unix now
     assert.ok(created.cancelAfter < before);
     // Round-trip through xrpl helpers
@@ -72,7 +68,7 @@ describe('escrow (testnet)', () => {
     assert.equal(back, created.cancelAfter);
   });
 
-  it('creates conditional escrow, finishes with explicit fee; vendor balance rises', async () => {
+  it('creates conditional escrow, autofills finish fee; vendor balance rises', async () => {
     const amountDrops = '100000'; // 0.1 XRP
 
     const created = await createConditionalEscrow(client, sender, {
@@ -84,24 +80,21 @@ describe('escrow (testnet)', () => {
     assert.ok(created.sequence > 0);
     assert.ok(validateFulfillment(created.fulfillment, created.condition));
 
-    const minFee = escrowFinishFeeDrops(created.fulfillment);
-    assert.ok(BigInt(minFee) >= 330n);
-
     const finished = await finishEscrow(client, finisher, {
       owner: sender.address,
       offerSequence: created.sequence,
       condition: created.condition,
       fulfillment: created.fulfillment,
     });
+    assertVericharMemo(finished);
 
     const { engineResult } = extractDeliveredAmount(finished);
     assert.equal(engineResult, 'tesSUCCESS');
 
-    // Fee on submitted tx should be at least the formula minimum
+    // xrpl.js autofill supplies the network-adjusted fulfillment fee.
     const feeUsed = finished.tx_json?.Fee || finished.Fee;
-    if (feeUsed != null) {
-      assert.ok(BigInt(feeUsed) >= BigInt(minFee));
-    }
+    assert.ok(feeUsed);
+    assert.ok(BigInt(feeUsed) > 0n);
 
     // Confirm vendor received funds via balance changes
     const delta = vendorBalanceDeltaFromEscrowFinish(
@@ -129,6 +122,7 @@ describe('escrow (testnet)', () => {
       owner: sender.address,
       offerSequence: created.sequence,
     });
+    assertVericharMemo(canceled);
 
     const { engineResult } = extractDeliveredAmount(canceled);
     assert.equal(engineResult, 'tesSUCCESS');

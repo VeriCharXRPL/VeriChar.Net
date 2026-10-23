@@ -8,22 +8,18 @@
  */
 
 const xrpl = require('xrpl');
+const { getEngineResult } = require('./transactions');
 
 /**
- * Extract delivered amount from a validated transaction result.
- * Prefer meta.delivered_amount; fall back only if missing and result is tesSUCCESS
- * for pure XRP payments without partial payment flag (still prefer delivered_amount).
+ * Extract delivered_amount from transaction metadata, or null if absent
+ * or the transaction did not succeed.
  *
  * @param {object} txResult - result from submitAndWait or a validated ledger tx
  * @returns {{ delivered: string|object|null, engineResult: string, validated: boolean }}
  */
 function extractDeliveredAmount(txResult) {
   const meta = txResult.meta || txResult.metaData || {};
-  const engineResult =
-    meta.TransactionResult
-    || txResult.engine_result
-    || txResult.engineResult
-    || '';
+  const engineResult = getEngineResult(txResult);
 
   // validated only when the field is explicitly true
   const validated = txResult.validated === true;
@@ -97,13 +93,11 @@ async function watchAccount(client, account, onTx) {
   return {
     unsubscribe: async () => {
       client.off('transaction', handler);
-      try {
+      if (client.isConnected()) {
         await client.request({
           command: 'unsubscribe',
           accounts: [account],
         });
-      } catch {
-        // ignore if already disconnected
       }
     },
   };
@@ -120,11 +114,7 @@ async function watchAccount(client, account, onTx) {
  */
 function vendorBalanceDeltaFromEscrowFinish(txResult, vendorAddress) {
   const meta = txResult.meta || txResult.metaData || {};
-  const engineResult =
-    meta.TransactionResult
-    || txResult.engine_result
-    || txResult.engineResult
-    || '';
+  const engineResult = getEngineResult(txResult);
   const validated = txResult.validated === true;
 
   if (engineResult !== 'tesSUCCESS' || !validated) {

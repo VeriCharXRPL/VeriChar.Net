@@ -14,6 +14,8 @@
 
 const { xrpl } = require('./client');
 const { generateConditionPair, validateFulfillment } = require('./condition');
+const { vericharMemo } = require('./memo');
+const { submitTransaction } = require('./transactions');
 
 /**
  * Create a conditional XRP escrow.
@@ -76,24 +78,21 @@ async function createConditionalEscrow(client, senderWallet, opts) {
     Amount: String(amountDrops),
     Condition: condition,
     CancelAfter: cancelAfter,
+    Memos: vericharMemo(),
   };
 
   xrpl.validate(tx);
 
-  const prepared = await client.autofill(tx);
-  const signed = senderWallet.sign(prepared);
-  const result = await client.submitAndWait(signed.tx_blob);
-
-  const engineResult =
-    result.result.meta?.TransactionResult || result.result.engine_result;
-
-  if (engineResult !== 'tesSUCCESS') {
-    throw new Error(`EscrowCreate failed: ${engineResult}`);
-  }
+  const result = await submitTransaction(
+    client,
+    tx,
+    senderWallet,
+    'EscrowCreate'
+  );
 
   return {
-    result: result.result,
-    sequence: prepared.Sequence,
+    result,
+    sequence: result.tx_json.Sequence,
     condition,
     fulfillment,
     cancelAfter,
@@ -101,26 +100,7 @@ async function createConditionalEscrow(client, senderWallet, opts) {
 }
 
 /**
- * Minimum Fee for EscrowFinish with a fulfillment (drops).
- * Per xrpl.org EscrowFinish docs (reference fee 10 drops):
- *   330 drops + 10 drops for every 16 bytes of the fulfillment
- *   → 330 + 10 * floor(fulfillment_bytes / 16)
- * Example: 32-byte fulfillment → 350 drops.
- * Multi-signing adds cost on top (not implemented here).
- * Generalized signer_count form from transaction-cost page is UNVERIFIED here
- * relative to the explicit 330 + 10-per-16-bytes wording on the EscrowFinish page.
- * @param {string} fulfillmentHex
- * @returns {string} fee in drops
- */
-function escrowFinishFeeDrops(fulfillmentHex) {
-  const bytes = Buffer.from(fulfillmentHex, 'hex').length;
-  const drops = 330 + 10 * Math.floor(bytes / 16);
-  return String(drops);
-}
-
-/**
  * Finish a conditional escrow by supplying the fulfillment.
- * Fee is set explicitly to at least the xrpl.org EscrowFinish-with-fulfillment minimum.
  *
  * @param {xrpl.Client} client
  * @param {xrpl.Wallet} finisherWallet - pays the fee
@@ -141,8 +121,6 @@ async function finishEscrow(client, finisherWallet, opts) {
     throw new Error('fulfillment does not match condition');
   }
 
-  const minFee = escrowFinishFeeDrops(fulfillment);
-
   const tx = {
     TransactionType: 'EscrowFinish',
     Account: finisherWallet.address,
@@ -150,28 +128,12 @@ async function finishEscrow(client, finisherWallet, opts) {
     OfferSequence: offerSequence,
     Condition: condition,
     Fulfillment: fulfillment,
-    Fee: minFee,
+    Memos: vericharMemo(),
   };
 
   xrpl.validate(tx);
 
-  const prepared = await client.autofill(tx);
-  // Keep explicit minimum if autofill returned something lower
-  if (BigInt(prepared.Fee) < BigInt(minFee)) {
-    prepared.Fee = minFee;
-  }
-
-  const signed = finisherWallet.sign(prepared);
-  const result = await client.submitAndWait(signed.tx_blob);
-
-  const engineResult =
-    result.result.meta?.TransactionResult || result.result.engine_result;
-
-  if (engineResult !== 'tesSUCCESS') {
-    throw new Error(`EscrowFinish failed: ${engineResult}`);
-  }
-
-  return result.result;
+  return submitTransaction(client, tx, finisherWallet, 'EscrowFinish');
 }
 
 /**
@@ -196,27 +158,16 @@ async function cancelEscrow(client, cancelerWallet, opts) {
     Account: cancelerWallet.address,
     Owner: owner,
     OfferSequence: offerSequence,
+    Memos: vericharMemo(),
   };
 
   xrpl.validate(tx);
 
-  const prepared = await client.autofill(tx);
-  const signed = cancelerWallet.sign(prepared);
-  const result = await client.submitAndWait(signed.tx_blob);
-
-  const engineResult =
-    result.result.meta?.TransactionResult || result.result.engine_result;
-
-  if (engineResult !== 'tesSUCCESS') {
-    throw new Error(`EscrowCancel failed: ${engineResult}`);
-  }
-
-  return result.result;
+  return submitTransaction(client, tx, cancelerWallet, 'EscrowCancel');
 }
 
 module.exports = {
   createConditionalEscrow,
   finishEscrow,
   cancelEscrow,
-  escrowFinishFeeDrops,
 };

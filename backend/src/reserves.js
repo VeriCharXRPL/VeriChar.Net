@@ -10,6 +10,8 @@
  */
 
 const { xrpl } = require('./client');
+const { vericharMemo } = require('./memo');
+const { submitTransaction } = require('./transactions');
 
 /**
  * Read current base and owner reserve from the network (drops).
@@ -17,7 +19,10 @@ const { xrpl } = require('./client');
  * @returns {Promise<{ baseReserveDrops: string, ownerReserveDrops: string }>}
  */
 async function getNetworkReserves(client) {
-  const state = await client.request({ command: 'server_state' });
+  const state = await client.request({
+    command: 'server_state',
+    ledger_index: 'current',
+  });
   const validated = state.result.state.validated_ledger
     || state.result.state;
 
@@ -133,22 +138,17 @@ async function fundReserves(client, sourceWallet, destinationAddress, amountDrop
     Account: sourceWallet.address,
     Destination: destinationAddress,
     Amount: String(amountDrops),
+    Memos: vericharMemo(),
   };
 
   xrpl.validate(tx);
 
-  const prepared = await client.autofill(tx);
-  const signed = sourceWallet.sign(prepared);
-  const result = await client.submitAndWait(signed.tx_blob);
-
-  const engineResult = result.result.meta?.TransactionResult
-    || result.result.engine_result;
-
-  if (engineResult !== 'tesSUCCESS') {
-    throw new Error(`fundReserves Payment failed: ${engineResult}`);
-  }
-
-  return result.result;
+  return submitTransaction(
+    client,
+    tx,
+    sourceWallet,
+    'fundReserves Payment'
+  );
 }
 
 module.exports = {
