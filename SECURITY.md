@@ -21,6 +21,7 @@ Status today: **Testnet prototype.** The public site is a simulation. The API do
 | Count a transaction only if `validated: true` and `tesSUCCESS` | `backend/src/monitor.js` |
 | Reserves come from the validated ledger, never a hardcoded number | `backend/src/reserves.js` |
 | Full suite, including live Testnet escrow tests, runs on every push to `main` | `.github/workflows/backend-tests.yml` |
+| Public API refuses donations, charity verification, tax receipts, and ledger writes | `backend/src/compliance.js`, `backend/src/api.js` |
 
 Ledger behavior is taken from [XRPL.org escrow](https://xrpl.org/docs/concepts/payment-types/escrow) and the conditional-escrow tutorial. If this repo and XRPL.org disagree about the ledger, XRPL.org wins.
 

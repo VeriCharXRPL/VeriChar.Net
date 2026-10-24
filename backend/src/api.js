@@ -5,6 +5,13 @@ const http = require('node:http');
 const xrpl = require('xrpl');
 const { API_TOKENS, API_CORS_ORIGINS } = require('./config');
 const { connectClient } = require('./client');
+const {
+  ComplianceClosed,
+  assertMayAcceptDonation,
+  assertMayIssueTaxReceipt,
+  assertMayMarkCharityVerified,
+  assertMaySubmitLedgerTransaction,
+} = require('./compliance');
 
 function hashToken(token) {
   return createHash('sha256').update(token, 'utf8').digest();
@@ -41,6 +48,31 @@ function sendJson(response, statusCode, body, headers = {}) {
   response.end(serialized);
 }
 
+const PRODUCT_DOORS = Object.freeze({
+  acceptDonation: assertMayAcceptDonation,
+  issueTaxReceipt: assertMayIssueTaxReceipt,
+  markCharityVerified: assertMayMarkCharityVerified,
+  submitLedgerTransaction: assertMaySubmitLedgerTransaction,
+});
+
+function productDoor(pathname, method) {
+  if (method !== 'POST') return null;
+  if (pathname === '/v1/donations') return 'acceptDonation';
+  if (pathname === '/v1/receipts') return 'issueTaxReceipt';
+  if (/^\/v1\/charities\/[^/]+\/verify$/.test(pathname)) return 'markCharityVerified';
+  if (/^\/v1\/networks\/[^/]+\/transactions$/.test(pathname)) return 'submitLedgerTransaction';
+  return null;
+}
+
+function refuseProductDoor(response, action) {
+  try {
+    PRODUCT_DOORS[action]();
+  } catch (error) {
+    if (!(error instanceof ComplianceClosed)) throw error;
+  }
+  return sendJson(response, 403, { error: 'compliance_closed', action });
+}
+
 function createApiServer({
   tokenRecords = API_TOKENS,
   corsOrigins = API_CORS_ORIGINS,
@@ -56,6 +88,11 @@ function createApiServer({
         corsHeaders['access-control-allow-origin'] = origin;
       }
       return sendJson(response, 200, { status: 'ok' }, corsHeaders);
+    }
+
+    const door = productDoor(url.pathname, request.method);
+    if (door) {
+      return refuseProductDoor(response, door);
     }
 
     if (request.method !== 'GET') {

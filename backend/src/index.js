@@ -14,4 +14,5 @@ module.exports = {
   reserves: require('./reserves'),
   monitor: require('./monitor'),
   oracle: require('./oracle'),
+  compliance: require('./compliance'),
 };

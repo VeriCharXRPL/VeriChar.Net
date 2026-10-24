@@ -149,4 +149,26 @@ describe('tenant-aware API', () => {
     assert.equal(response.status, 405);
     assert.equal(response.headers.get('allow'), 'GET');
   });
+
+  it('keeps donation, verification, receipt, and ledger-write doors closed', async () => {
+    const before = ledgerRequests.length;
+    const doors = [
+      ['/v1/donations', 'acceptDonation'],
+      ['/v1/charities/example-charity/verify', 'markCharityVerified'],
+      ['/v1/receipts', 'issueTaxReceipt'],
+      ['/v1/networks/mainnet/transactions', 'submitLedgerTransaction'],
+      ['/v1/networks/testnet/transactions', 'submitLedgerTransaction'],
+    ];
+
+    for (const [path, action] of doors) {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${tokens.tenantA}` },
+      });
+      assert.equal(response.status, 403);
+      assert.deepEqual(await response.json(), { error: 'compliance_closed', action });
+    }
+
+    assert.equal(ledgerRequests.length, before);
+  });
 });
