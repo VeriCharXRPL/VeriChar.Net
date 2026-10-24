@@ -1,0 +1,22 @@
+# Render Blueprint — deploy backend only (static site is on Vercel)
+# Dashboard: New → Blueprint → connect this repo
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: verichar-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: XRPL_WS_URL
+        value: wss://s.altnet.rippletest.net:51233
+      - key: API_TOKENS_JSON
+        value: "[]"
+      - key: API_CORS_ORIGINS
+        value: '["https://verichar.net","https://www.verichar.net","https://verichar.vercel.app"]'
