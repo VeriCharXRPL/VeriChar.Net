@@ -1,0 +1,22 @@
+# XRPL domain association for verichar.net
+# Spec: https://xrpl.org/docs/references/xrp-ledger-toml
+# After creating an account, set Domain to verichar.net on-ledger and list the address below.
+
+[METADATA]
+modified = "2026-10-22T00:00:00.000Z"
+
+[[ACCOUNTS]]
+address = "rBrwJxEff3gEiL2cTFRVDyJ6jJxLpJZqiU"
+network = "main"
+desc = "VeriChar main account"
+
+[[VALIDATORS]]
+# none operated by VeriChar today
+
+[PRINCIPALS]
+name = "Brianne Salato"
+email = "VeriChar@proton.me"
+
+[ORGANIZATION]
+name = "VeriChar"
+domain = "verichar.net"
