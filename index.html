@@ -231,7 +231,8 @@ if(location.protocol==='file:'&&!configuredApiBase){
 const P=$('#portal'),shell=['header','nav','main','footer'].map(s=>$(s));let opener=null;
 function openP(){opener=document.activeElement;shell.forEach(x=>x.inert=true);P.hidden=false;$('#pClose').focus()}
 function closeP(){P.hidden=true;shell.forEach(x=>x.inert=false);if(opener)opener.focus()}
-document.addEventListener('keydown',e=>{
+$('#pOpen').addEventListener('click',openP);$('#pClose').addEventListener('click',closeP);
+  document.addEventListener('keydown',e=>{
   if(P.hidden)return;
   if(e.key==='Escape'){closeP();return}
   if(e.key!=='Tab')return;
