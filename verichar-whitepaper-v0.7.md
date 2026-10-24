@@ -13,7 +13,7 @@ Founder and Product Architect
 
 ## Document status
 
-This is **Version 0.7**, a draft. It replaces Version 0.6 for product and business-model accuracy as of **22 October 2026**.
+This is **Version 0.7**, a draft. It replaces Version 0.6 for product and business-model accuracy as of **22 October 2026**. On **23 October 2026**, sections 10 and 11 were updated with the XRPL controls enforced in the repo and the Illinois registration gates. The published PDF can lag this Markdown until the next PDF build.
 
 **What changed from 0.6**
 
@@ -259,27 +259,40 @@ Exact pricing for enterprise tiers, donation instrument design, and on-ledger vs
 
 ## 10. Security and risk
 
-| Risk | Mitigation direction |
-|---|---|
-| Stolen fulfillment | Hold fulfillment only in oracle secure store; never log; never ship to browsers |
-| Malicious or compromised oracle | Dual proofs; audit logs; eventual multi-party or policy controls *(TBD)* |
-| Fake invoices / staged delivery photos | Real OCR, vendor registries, EXIF/GPS fences, carrier APIs — **not implemented** |
-| Malicious API or XRPL server | Testnet allowlist; prefer self-hosted infrastructure in production **[S6]** |
-| Key compromise | No hot seeds in public site; hashed API tokens; hardware / custody plans for Mainnet |
-| Regulatory | No Mainnet funds until legal review |
-| Over-claiming | Prototype labeling on site and in this paper |
+Nothing in this design is legally impenetrable. Controls make some attacks harder. They do not cancel statutes, contracts, or lawsuits.
 
-Cryptography reduces certain classes of error; it does not eliminate human fraud.
+| Risk | What is enforced now | Still required |
+|---|---|---|
+| Wrong network | API refuses to start unless the URL is `wss://` and the host is an official XRPL Testnet endpoint | Keep the allowlist until a reviewed Mainnet change |
+| Stolen fulfillment | Helpers do not log it; the public site never receives it | Secret store only; never git, logs, or browsers |
+| Forged proof | Oracle is a stub and says so | Real invoice and delivery checks, or an honest manual review |
+| Bad ledger read | Count only `validated: true` and `tesSUCCESS`; reserves are read live | Same rule in any future product writer |
+| Key compromise | No hot seeds in the website; API tokens stored as SHA-256 hashes | Custody plan and independent review before Mainnet |
+| Over-claiming | Site and this paper say prototype / simulation | Keep claims tied to what CI and the site actually do |
+
+Cryptography reduces certain classes of error. It does not eliminate human fraud. A passing Testnet CI run is not Mainnet certification.
+
+The operational checklist is `SECURITY.md` in the repository.
 
 ---
 
 ## 11. Compliance considerations
 
-- Charity verification may interact with IRS (or local) non-profit records; **no lookup is performed today**.  
-- Tax receipts, if offered, need jurisdiction-specific rules.  
-- Enterprise CSR exports are **not** certified financial statements.  
-- Token and escrow features depend on issuer flags and amendments; re-check before Mainnet.  
-- This paper is **not** legal advice. Counsel should review before pilot.
+This paper is **not** legal advice. Counsel reviews before any pilot or real gift.
+
+**Illinois, before any real solicitation or any holding of charitable property:**
+
+- Solicitation for Charity Act, 225 ILCS 460, and Ill. Admin. Code tit. 14, part 400: a charitable organization that solicits in Illinois registers with the Attorney General **before** soliciting, unless an exemption actually applies. Soliciting first can add a late fee.
+- Charitable Trust Act, 760 ILCS 55: registration can also apply to holding charitable property above the statutory threshold (the Attorney General’s trust rules have used property over $4,000).
+- VeriChar has **not** filed those registrations. It does not take real gifts and does not hold charitable property.
+- Money-transmission analysis is still required before real value moves. Non-custody and XRPL escrow can reduce pooled-balance risk. They do not decide the licensing question.
+- “Donate to VeriChar” on the site is email only. It is support for the company, not a representation of a tax-deductible charitable contribution, and it is not yet a public ledger trail.
+
+Other boundaries that stay in force:
+
+- Charity verification may later use IRS or local records. **No lookup runs today.**
+- Enterprise exports are not certified financial statements, and VeriChar does not file tax returns for customers.
+- Token and escrow features depend on issuer flags and amendments. Re-check XRPL.org before Mainnet.
 
 ---
 

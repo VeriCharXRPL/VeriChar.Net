@@ -12,7 +12,7 @@
 
 **Status:** Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
 
-Draft: [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md)
+Draft: [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
 
 ## XRPL Testnet verification status
 
