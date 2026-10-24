@@ -246,7 +246,7 @@ People and organizations who want the transparency layer to exist can **donate t
 
 ### Revenue path B — Enterprise SaaS tiers
 
-Corporate and institutional customers can license **SaaS tiers** for analytics that **streamline audits** and CSR / impact reporting. The product intent is documented giving trails (on-chain when settlement is live), less stress and overhead assembling records, and **tax compliance workflows** and exportable evidence that can **support** tax and regulatory documentation. **VeriChar does not file IRS or other tax returns for customers**; materials are not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show. This is voluntary commercial software, separate from free public giving rails.
+Corporate and institutional customers can license **SaaS tiers** for analytics that **streamline audits** and CSR / impact reporting. The product intent is documented giving trails (on-chain when settlement is live), less stress and overhead assembling records, and **tax compliance workflows**, planned **tax filing integration** (exports into customer filing tools — VeriChar does not submit returns), and exportable evidence that can **support** tax and regulatory documentation. **VeriChar does not file IRS or other tax returns for customers**; materials are not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show. This is voluntary commercial software, separate from free public giving rails.
 
 ### What is explicitly rejected
 
