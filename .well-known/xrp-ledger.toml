@@ -6,9 +6,9 @@
 modified = "2026-10-22T00:00:00.000Z"
 
 [[ACCOUNTS]]
-# address = "rXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-# network = "main"
-# desc = "VeriChar platform / operations account"
+address = "rBrwJxEff3gEiL2cTFRVDyJ6jJxLpJZqiU"
+network = "main"
+desc = "VeriChar main account"
 
 [[VALIDATORS]]
 # none operated by VeriChar today
