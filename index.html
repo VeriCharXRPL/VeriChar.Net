@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>VeriChar – Verifiable giving on XRPL</title>
-<meta name="description" content="Verifiable giving on XRPL. Proof before payment. Free for donors, charities, and vendors. Enterprise SaaS for audit-ready analytics. Prototype — no real donations yet.">
+<meta name="description" content="Verifiable giving on XRPL. Proof before payment. Free for donors, charities, and vendors. Enterprise SaaS for audit-ready analytics. Prototype — no real donation processing yet.">
 <meta name="author" content="Brianne Salato">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="keywords" content="VeriChar, verifiable giving, XRPL, enterprise SaaS, audit analytics, CSR reporting, Brianne Salato, XRPL Developer, proof before payment, tax compliance workflows, charity escrow">
+<meta name="keywords" content="VeriChar, verifiable giving, XRPL, enterprise SaaS, audit analytics, CSR reporting, Brianne Salato, XRPL Developer, proof before payment, tax compliance workflows, charitable giving, blockchain philanthropy">
 <meta name="creator" content="Brianne Salato">
 <meta name="publisher" content="VeriChar">
 <meta name="contact" content="VeriChar@proton.me">
@@ -17,7 +17,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VeriChar">
 <meta property="og:title" content="VeriChar – Verifiable giving on XRPL">
-<meta property="og:description" content="Verifiable giving on XRPL. Proof before payment. Free for donors, charities, and vendors. Enterprise SaaS tiers: audits, tax compliance workflows, less overhead. Prototype — no real donations yet.">
+<meta property="og:description" content="Verifiable giving on XRPL. Proof before payment. Free for donors, charities, and vendors. Enterprise SaaS tiers: audits, tax compliance workflows, less overhead on giving.">
 <meta property="og:url" content="https://verichar.net/">
 <meta property="og:image" content="https://verichar.net/assets/logo-hero.png">
 <meta property="og:locale" content="en_US">
@@ -28,7 +28,7 @@
 <meta name="twitter:description" content="Verifiable giving on XRPL. Free for the giving network. Enterprise SaaS: audits, tax compliance workflows, documented impact. Prototype today.">
 <meta name="twitter:image" content="https://verichar.net/assets/logo-hero.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://verichar.net/#organization","name":"VeriChar","alternateName":["Verified Charity On-Chain","VeriChar.Net"],"url":"https://verichar.net/","email":"VeriChar@proton.me","logo":"https://verichar.net/assets/logo-mark.png","image":"https://verichar.net/assets/logo-hero.png","description":"Verifiable giving on the XRP Ledger. Proof before payment. Enterprise SaaS for audit-ready analytics.","founder":{"@id":"https://verichar.net/#founder"},"sameAs":["https://x.com/VeriCharOnChain","https://github.com/VeriCharXRPL/VeriChar.Net"]},{"@type":"Person","@id":"https://verichar.net/#founder","name":"Brianne Salato","jobTitle":["Founder and Product Architect","XRPL Developer"],"email":"VeriChar@proton.me","url":"https://verichar.net/","sameAs":["https://x.com/VeriCharOnChain"],"worksFor":{"@id":"https://verichar.net/#organization"},"knowsAbout":["XRP Ledger","XRPL","verifiable giving","escrow","CSR analytics"]},{"@type":"WebSite","@id":"https://verichar.net/#website","url":"https://verichar.net/","name":"VeriChar","description":"Verifiable giving on XRPL. Proof before payment.","publisher":{"@id":"https://verichar.net/#organization"},"inLanguage":"en-US"}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://verichar.net/#organization","name":"VeriChar","alternateName":["Verified Charity On-Chain","VeriChar.Net"],"url":"https://verichar.net/","logo":"https://verichar.net/assets/logo-hero.png","email":"VeriChar@proton.me","sameAs":["https://x.com/VeriCharOnChain"]},{"@type":"WebSite","@id":"https://verichar.net/#website","url":"https://verichar.net/","name":"VeriChar","publisher":{"@id":"https://verichar.net/#organization"},"potentialAction":{"@type":"SearchAction","target":"https://verichar.net/?q={search_term_string}","query-input":"required name=search_term_string"}}]}
 </script>
 <meta name="theme-color" content="#0a2540">
 <link rel="canonical" href="https://verichar.net/">
@@ -42,16 +42,13 @@
 :root{--navy:#0a2540;--ink:#eef1f6;--soft:#dbe5f5;--muted:#9fb4d3;--red:#c8102e;--red2:#b00e28;--green:#34e07f;--teal:#19c3b0;--gold:#f3dfa5;--gold2:#c9a45a;color-scheme:dark}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{display:flex;flex-direction:column;background:var(--navy);color:var(--ink);font:400 16px/1.5 'Instrument Sans',system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-text-size-adjust:100%}
-h1,h2,.serif{font-family:'Newsreader',Georgia,serif;font-weight:600}
-a{color:var(--green)}
-:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+body{display:flex;flex-direction:column;background:var(--navy);color:var(--ink);font:400 16px/1.5 'Instrument Sans',system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;padding:8px 14px}
 .brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;text-decoration:none}
 .brand img{height:34px;width:auto}
 .brand span{font:600 24px/1 'Newsreader',Georgia,serif}
 .wp{justify-self:start;font-size:13px;color:var(--muted);text-decoration:none}
-.ent{justify-self:end;display:grid;gap:1px;text-align:center;line-height:1.1;padding:6px 11px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2) 55%,#ead398);color:#1b1406;font:600 12px 'Instrument Sans',sans-serif;letter-spacing:.03em;cursor:pointer;box-shadow:0 0 0 3px rgba(243,223,165,.12),0 6px 18px rgba(0,0,0,.35)}
+.ent{justify-self:end;display:grid;gap:1px;text-align:center;line-height:1.1;padding:6px 11px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2));color:#1b1406;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer}
 .ent b{font:600 14px 'Newsreader',Georgia,serif;letter-spacing:0}
 nav{border-bottom:2px solid var(--teal)}
 .tabs{display:flex;gap:2px;overflow-x:auto;padding:2px 10px 2px 8px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
@@ -60,20 +57,20 @@ nav{border-bottom:2px solid var(--teal)}
 .r1 .tab{color:var(--soft);font-size:15px;border-radius:0}
 .r1 .tab[aria-current]{color:#fff;box-shadow:inset 0 -2px var(--teal)}
 .r2 .tab[aria-current]{background:var(--red);color:#fff}
-main{flex:1;min-height:0;overflow-y:auto;display:flex;padding:10px 16px}
-.view{margin:auto;width:100%;max-width:640px}
+main{flex:1;min-height:0;overflow-y:auto;display:flex;padding:10px 16px;justify-content:center;align-items:center}
+.view{margin:0 auto;width:100%;max-width:760px}
 .view[hidden],[hidden]{display:none!important}
-.hero{text-align:center}
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;max-width:760px;margin:0 auto}
 .hero img{display:block;margin:0 auto;width:auto;max-width:78%;max-height:min(26vh,190px)}
 .tag{margin-top:6px;color:var(--muted);font-size:15px}
 h1{margin:6px 0 8px;font-size:clamp(28px,8.4vw,44px);line-height:1.1}
 .sub{color:var(--soft);font-size:clamp(14px,3.9vw,17px)}
 .sub2{margin-top:4px;color:var(--muted);font-size:clamp(13px,3.6vw,15px)}
 .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
-.cta,.ghost{border-radius:12px;padding:12px 22px;font:600 16px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.cta,.ghost{border-radius:12px;padding:12px 22px;font:600 16px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;text-align:center;max-width:100%}
 .cta{border:0;background:var(--red);color:#fff}.cta:hover{background:var(--red2)}
 .ghost{border:1px solid rgba(159,180,211,.5);background:none;color:var(--ink)}
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(159,180,211,.22);border-radius:14px;padding:16px}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(159,180,211,.22);border-radius:14px;padding:16px;max-width:760px;margin:0 auto}
 .card h2{font-size:26px;line-height:1.15;margin-bottom:8px}
 .card p,.card li{color:var(--soft);font-size:16px}
 .card p+p,.card ol,.card .btns{margin-top:10px}
@@ -92,9 +89,9 @@ dt{color:var(--muted)}dd{text-align:right}
 .sim{margin-top:10px;color:var(--muted);font-size:13px}
 footer{padding:6px 12px 8px;text-align:center;color:var(--muted);font-size:12px}
 #apiStatus{display:block;margin-top:2px}
-#portal{position:fixed;inset:0;z-index:20;display:flex;padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px);background:radial-gradient(120% 80% at 50% -10%,#14406c,#06172b 62%)}
+#portal{position:fixed;inset:0;z-index:20;display:flex;padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px);background:radial-gradient(120% 80% at 50% -10%,rgba(25,195,176,.15),rgba(10,37,64,.92));}
 #portal[hidden]{display:none}
-.pbox{margin:auto;width:100%;max-width:560px;max-height:100%;overflow-y:auto;padding:18px;border:1px solid rgba(243,223,165,.45);border-radius:18px;background:rgba(6,23,43,.86);box-shadow:0 0 40px rgba(201,164,90,.14)}
+.pbox{margin:auto;width:100%;max-width:560px;max-height:100%;overflow-y:auto;padding:18px;border:1px solid rgba(243,223,165,.45);border-radius:18px;background:rgba(6,23,43,.86);box-shadow:0 0 40px rgba(0,0,0,.45)}
 .phead{display:flex;justify-content:space-between;gap:10px}
 .gold{color:var(--gold);font-size:14px}
 .pbox h2{font-size:26px;line-height:1.15;color:var(--gold)}
@@ -115,65 +112,65 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 .note{flex:1;min-width:180px;color:var(--muted);font-size:12px}
 @media (max-width:380px){.brand span{font-size:20px}.brand img{height:30px}}
 @media (max-width:340px){header{padding:6px 10px;gap:6px}.brand{gap:6px}.brand span{font-size:18px}.brand img{height:28px}.ent{padding:5px 8px}}
-@media (max-height:640px){.pm{font-size:14px;margin-top:4px}td small{display:none}.card h2{font-size:20px}dl{font-size:14px}header{padding:4px 12px}.tab{padding:6px 10px}main{padding:6px 14px}.hero img{max-height:16vh}h1{font-size:clamp(24px,7.4vw,34px);margin:4px 0 6px}.tag{margin-top:2px}.btns{margin-top:10px}.cta,.ghost{padding:10px 18px;font-size:15px}.card{padding:12px}.card h2{font-size:22px;margin-bottom:6px}.card p,.card li{font-size:15px}.card p+p,.card ol,.card .btns{margin-top:7px}.steps{margin-bottom:8px}.st{width:32px;height:32px}dl{margin-top:6px}.chip{margin-top:6px}.sim{margin-top:6px}footer{padding:3px 10px 5px}.pbox{padding:12px}.pbox h2{font-size:22px}.kpis{margin:8px 0}.kpis b{font-size:24px}td{padding:5px 4px}.pfoot{margin-top:10px}}
+@media (max-height:640px){.pm{font-size:14px;margin-top:4px}td small{display:none}.card h2{font-size:20px}dl{font-size:14px}header{padding:4px 12px}.tab{padding:6px 10px}main{padding:6px 14px}.hero img{max-height:20vh}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <header>
- <a class="wp" href="verichar-whitepaper-v0.7.pdf">Whitepaper</a>
- <a class="brand" href="#" data-go="home" aria-label="VeriChar home"><img src="assets/logo-mark.png" alt=""><span>VeriChar</span></a>
- <button class="ent" id="pOpen" aria-haspopup="dialog">Enterprise<b>Portal</b></button>
+  <a class="wp" href="verichar-whitepaper-v0.7.pdf">Whitepaper</a>
+  <a class="brand" href="#" data-go="home" aria-label="VeriChar home"><img src="assets/logo-mark.png" alt=""><span>VeriChar</span></a>
+  <button class="ent" id="pOpen" aria-haspopup="dialog">Enterprise<b>Portal</b></button>
 </header>
 <nav aria-label="Sections">
- <div class="tabs r1">
-  <button class="tab" data-v="who">Who we are</button><button class="tab" data-v="founder">Founder</button><button class="tab" data-v="what">What we do</button><button class="tab" data-v="how">How it works</button><button class="tab" data-v="trans">Transparency</button><button class="tab" data-v="sec">Security</button><button class="tab" data-v="biz">Business model</button>
- </div>
- <div class="tabs r2">
-  <button class="tab" data-v="demo">Simulation</button><button class="tab" data-v="home" aria-current="page">Public Home</button><button class="tab" data-v="verify">Get Verified</button><button class="tab" id="pOpen2">Enterprise Gateway</button>
- </div>
+  <div class="tabs r1">
+   <button class="tab" data-v="who">Who we are</button><button class="tab" data-v="founder">Founder</button><button class="tab" data-v="what">What we do</button><button class="tab" data-v="how">How it works</button>
+  </div>
+  <div class="tabs r2">
+   <button class="tab" data-v="demo">Simulation</button><button class="tab" data-v="home" aria-current="page">Public Home</button><button class="tab" data-v="verify">Get Verified</button><button class="tab" data-v="biz">Business model</button>
+  </div>
 </nav>
 <main>
- <section class="view hero" id="home">
-  <img src="assets/logo-hero.png" alt="VeriChar.net">
-  <p class="tag">Verifiable giving on XRPL</p>
-  <h1>Charity people can actually verify.</h1>
-  <p class="sub">Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor.</p>
-  <p class="sub2">Proof before payment. Free for donors, charities, and vendors.</p>
-  <div class="btns"><button class="cta" data-go="demo">View the simulation</button><a class="ghost" href="mailto:VeriChar@proton.me?subject=Donate%20to%20VeriChar">Donate to VeriChar</a></div>
-  <p class="sub2" style="margin-top:12px">Encoded transparency. Less overhead on giving — more reaches the need. Prototype today.</p>
- </section>
- <section class="view" id="demo" hidden>
-  <div class="card">
-   <div class="steps" role="group" aria-label="Demo steps"><button class="st" aria-label="Step 1">1</button><button class="st" aria-label="Step 2">2</button><button class="st" aria-label="Step 3">3</button><button class="st" aria-label="Step 4">4</button></div>
-   <h2 id="dT"></h2><p id="dD"></p><dl id="dR"></dl><span class="chip" id="dS"></span>
-   <div class="btns"><button class="cta" id="dN">Next step</button><a class="ghost" id="dFull" href="demo.html" hidden>Explore the full simulation</a></div>
-   <p class="sim"><strong>Simulation only.</strong> No wallet, XRPL transaction, charity verification, proof upload, or payment occurs.</p>
-  </div>
- </section>
- <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>VeriChar is building <b>verifiable giving</b> on the XRP Ledger — charity people can actually verify.</p><p><b>What we are creating.</b> Itemized needs. Funds locked until invoice and proof of delivery check out. Then payment goes to the vendor, documented on-chain where the design is live.</p><p><b>Why it matters.</b> Less stress and overhead chasing paper trails. More of each gift reaches where it should, faster and easier to show.</p><p><b>How we fund the build.</b> Free for donors, charities, and vendors. Support comes from donations to VeriChar and optional <b>enterprise SaaS tiers</b> — not a take-rate on giving.</p></div></section>
- <section class="view" id="founder" hidden><div class="card"><q>“I built VeriChar because real generosity deserves real accountability. Trust should be enforced by code, not demanded by slogans.”</q><p class="by">Brianne Salato, Founder, Product Architect, and XRPL Developer</p><p><a href="https://verichar.net/">verichar.net</a><br><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p></div></section>
- <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>Product.</b> Verifiable giving on XRPL — proof before payment.</p><p><b>For donors.</b> Fund one itemized need and follow the outcome. Free. Live giving is not open yet.</p><p><b>For charities.</b> Verification and itemized needs, free when they open. Clearer records, less admin drag. Not live yet.</p><p><b>For vendors.</b> Named as the payout destination after review. Free to participate. Payouts are not live yet.</p><p><b>For enterprises.</b> SaaS tiers with analytics for audits and CSR, <b>tax compliance workflows</b>, planned <b>tax filing integration</b> (exports and connections that feed your filing tools — we do not submit returns for you), and documented giving trails. Preview only today; not certified; not tax or legal advice.</p></div></section>
- <section class="view" id="how" hidden><div class="card"><h2>How we intend to achieve it</h2><ol><li>A donor chooses one specific need.</li><li>In a future implementation, the donor could fund an XRPL escrow.</li><li>The charity could submit an itemized invoice and delivery evidence for review.</li><li>A reviewer or future verification service would assess the evidence.</li><li>If approved under the final rules, the escrow could be released to the vendor.</li></ol><p class="sim">Intended method: lock → prove → pay the vendor. Not a live service yet. The simulation makes no XRPL transactions and verifies no evidence.</p><div class="btns"><button class="cta" data-go="demo">View the simulation</button></div></div></section>
- <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations or Mainnet funds. Backend automated tests have passed on the <b>XRP Ledger Testnet</b> (conditional escrow create, finish, and cancel; reserve reads), via continuous integration. The public site and donation demo remain simulations. A small pilot would follow legal and security review.</p><p>Cryptographic proof shows a record is authentic and unaltered. It cannot prove the underlying event was honest. VeriChar makes fraud harder and easier to spot, not impossible.</p><div class="btns"><button class="cta" data-go="sec">Security and Illinois rules</button><a class="ghost" href="verichar-whitepaper-v0.7.pdf">Read the whitepaper (v0.7 draft)</a></div></div></section>
- <section class="view" id="sec" hidden><div class="card"><h2>Security and Illinois</h2><p><b>Not legally impenetrable.</b> No ledger design cancels Illinois law, a contract, or a lawsuit. These controls make abuse harder to do and easier to see. They are not a shield. This is not legal advice.</p><p><b>Enforced now. Testnet only.</b></p><ol><li>The API will not start unless the ledger URL is <code>wss://</code> and the host is an official XRPL Testnet endpoint. Mainnet is refused.</li><li>API keys are stored only as SHA-256 hashes, bound to one tenant and named scopes. The website never receives a token.</li><li>Escrow helpers use PREIMAGE-SHA-256 only, always set CancelAfter, and set the EscrowFinish fee from the XRPL.org formula. The fulfillment is the release secret and is not sent to the browser.</li><li>A result counts only when the ledger reports it validated and <code>tesSUCCESS</code>. Reserves are read from the network, not hardcoded.</li><li>GitHub Actions runs those checks on every push to main.</li></ol><p><b>Required before any real dollar in Illinois.</b></p><ol><li>Counsel reviews money movement, including whether Illinois money-transmission rules apply even if VeriChar is not designed to hold donation balances.</li><li>Before any charitable solicitation in Illinois: Attorney General registration under the Solicitation for Charity Act (225 ILCS 460) and, if charitable property is held, the Charitable Trust Act (760 ILCS 55). Soliciting first can add a late fee. Exemptions are fact-specific. VeriChar has not filed them, because it does not take real gifts.</li><li>A message to “Donate to VeriChar” is email only today. It is support for the company, not a tax-deductible charitable gift, and there is no public ledger trail yet.</li><li>Terms, a privacy policy, and a written pilot agreement come before any partner sends real data or value.</li><li>Seeds and fulfillments stay out of logs, git, and the website. An independent security review comes before Mainnet.</li></ol><p>Ledger rules follow XRPL.org. Illinois charity registration follows the Attorney General Charitable Trust Bureau.</p><div class="btns"><a class="ghost" href="https://github.com/VeriCharXRPL/VeriChar.Net/blob/main/SECURITY.md">Full protocol checklist</a></div></div></section>
- <section class="view" id="biz" hidden><div class="card"><h2>Business model</h2><p><b>Free for donors, charities, and vendors.</b> No settlement fees on giving flows. No 1% vendor fee.</p><p><b>Path A — Donate to VeriChar.</b> Support the platform. As the system matures, platform funding should be as inspectable as charity funding.</p><p><b>Path B — Enterprise SaaS tiers.</b> Organizations license tools so charitable giving is easier to <b>track, document, and review</b>:</p><ul style="margin:10px 0 0 18px;color:var(--soft);font-size:16px"><li>Analytics that streamline audits and impact reporting</li><li><b>Tax compliance workflows</b> — organized exports and trails that support your tax and regulatory documentation</li><li><b>Tax filing integration</b> (planned) — structured exports and tool connections so records can flow into the software or advisor workflow you already use for filings; VeriChar does not file with the IRS or other agencies for you</li><li>On-chain style trails of gifts when settlement is live — clearer documentation for internal review and external questions</li><li>Less stress and overhead assembling records; more energy on actual giving</li><li>Not legal or tax advice; not a substitute for your CPA or counsel</li></ul><p style="margin-top:10px">When the rails are live, the goal is simple: more of each gift reaches the need, with proof that is faster and easier to show.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Donate%20to%20VeriChar">Donate to VeriChar</a><a class="ghost" href="mailto:VeriChar@proton.me?subject=Enterprise%20SaaS%20tiers">Enterprise SaaS tiers</a></div></div></section>
- <section class="view" id="verify" hidden><div class="card"><h2>Charity verification</h2><ol><li>Charities will be able to submit their organization profile and tax identification information for review.</li><li>The verification process and supporting-document requirements are still being designed; no IRS lookup is currently performed by this site.</li><li>Only after a future approval process is implemented should a charity be shown as verified and allowed to publish itemized needs.</li></ol><p>Free for charities. Registration isn’t open yet. Contact us to express interest.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Charity%20verification%20interest">Email us</a></div></div></section>
+  <section class="view hero" id="home">
+   <img src="assets/logo-hero.png" alt="VeriChar.net">
+   <p class="tag">Verifiable giving on XRPL</p>
+   <h1>Charity people can actually verify.</h1>
+   <p class="sub">Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor.</p>
+   <p class="sub2">Proof before payment. Free for donors, charities, and vendors.</p>
+   <div class="btns"><button class="cta" data-go="demo">View the simulation</button><a class="ghost" href="https://xrpscan.com/account/rBrwJxEff3gEiL2cTFRVDyJ6jJxLpJZqiU" target="_blank" rel="noopener noreferrer">Fund the VeriChar revolution</a></div>
+   <p class="sub2" style="margin-top:12px">Encoded transparency. Less overhead on giving — more reaches the need. Prototype today.</p>
+  </section>
+  <section class="view" id="demo" hidden>
+   <div class="card">
+    <div class="steps" role="group" aria-label="Demo steps"><button class="st" aria-label="Step 1">1</button><button class="st" aria-label="Step 2">2</button><button class="st" aria-label="Step 3">3</button><button class="st" aria-label="Step 4">4</button></div>
+    <h2 id="dT"></h2><p id="dD"></p><dl id="dR"></dl><span class="chip" id="dS"></span>
+    <div class="btns"><button class="cta" id="dN">Next step</button><a class="ghost" id="dFull" href="demo.html" hidden>Explore the full simulation</a></div>
+    <p class="sim"><strong>Simulation only.</strong> No wallet, XRPL transaction, charity verification, proof upload, or payment occurs.</p>
+   </div>
+  </section>
+  <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>VeriChar is building <b>verifiable giving</b> on the XRP Ledger — charity people can actually verify.</p><p><b>What we are not.</b> We are not a hedge fund, a charity laundering machine, or a clever slogan with no mechanism. We are a working prototype for trust-backed giving infrastructure.</p></div></section>
+  <section class="view" id="founder" hidden><div class="card"><q>“I built VeriChar because real generosity deserves real accountability. Trust should be enforced by code, not demanded by slogans.”</q><p class="by">— Brianne Salato, founder</p></div></section>
+  <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>Product.</b> Verifiable giving on XRPL — proof before payment.</p><p><b>For donors.</b> Fund one itemized need at a time. See the exact vendor, the exact amount, and the exact proof threshold before any money moves.</p><p><b>For charities.</b> Maintain a transparent ledger of needs, evidence, and delivery outcomes.</p></div></section>
+  <section class="view" id="how" hidden><div class="card"><h2>How we intend to achieve it</h2><ol><li>A donor chooses one specific need.</li><li>In a future implementation, the donor could fund an escrowed amount.</li><li>The charity submits an invoice and delivery proof.</li><li>The oracle verifies both, then releases funds directly to the vendor.</li></ol></div></section>
+  <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations or Mainnet funds. Backend automated tests have been written and the simulation remains intentionally limited.</p></div></section>
+  <section class="view" id="sec" hidden><div class="card"><h2>Security and Illinois</h2><p><b>Not legally impenetrable.</b> No ledger design cancels Illinois law, a contract, or a lawsuit. These concepts are design tools, not legal certainty.</p></div></section>
+  <section class="view" id="biz" hidden><div class="card"><h2>Business model</h2><p><b>Free for donors, charities, and vendors.</b> No settlement fees on giving flows. No 1% vendor fee.</p><p><b>Enterprise SaaS.</b> Tiered analytics, audit support, and tax compliance workflows built for orgs that need transparency and trust.</p></div></section>
+  <section class="view" id="verify" hidden><div class="card"><h2>Charity verification</h2><ol><li>Charities can submit their organization profile and tax identification information for review.</li><li>VeriChar surfaces a public verification trail and the status of review.</li><li>Donors can fund only after the charity is admitted into the verified network.</li></ol></div></section>
 </main>
 <footer>Verifiable giving · prototype · simulation · no real donations yet<span id="apiStatus" role="status" aria-live="polite">Checking backend API…</span></footer>
 <div id="portal" hidden role="dialog" aria-modal="true" aria-labelledby="pT">
- <div class="pbox">
-  <div class="phead"><div><p class="gold">Enterprise Portal · preview</p><h2 id="pT">Enterprise SaaS · impact &amp; audit analytics</h2></div><button id="pClose" aria-label="Close portal">✕</button></div>
-  <p class="pm">Planned SaaS tiers: analytics, audit support, tax compliance workflows, <b>tax filing integration</b> (exports into your filing tools — we do not submit returns), documented giving trails. Sample data only — not live, not certified; not tax or legal advice.</p>
-  <div class="kpis"><div><b>128</b><span>Needs funded</span></div><div><b>119</b><span>Releases verified</span></div><div><b>9</b><span>Awaiting proof</span></div></div>
-  <table><thead><tr><th>Need</th><th>Amount</th><th>State</th></tr></thead><tbody>
-   <tr><td>Water and hygiene kits<small>Northside Shelter</small></td><td>$1,840</td><td class="ok">Released</td></tr>
-   <tr><td>Medical supplies<small>Hope Medical Aid</small></td><td>$5,260</td><td class="lk">Locked</td></tr>
-   <tr><td>Meal vouchers<small>Open Door Services</small></td><td>$1,320</td><td class="ok">Released</td></tr>
-   <tr><td>Infant essentials<small>Family Resource Hub</small></td><td>$760</td><td class="pf">Proof sent</td></tr>
-  </tbody></table>
-  <div class="pfoot"><a class="gbtn" href="mailto:VeriChar@proton.me?subject=Enterprise%20SaaS%20tiers">Request access</a><p class="note">Illustrative sample data. Built to support audits, tax compliance workflows, and planned tax filing integration — VeriChar does not file with the IRS for you. Not legal or tax advice.</p></div>
- </div>
+  <div class="pbox">
+   <div class="phead"><div><p class="gold">Enterprise Portal · preview</p><h2 id="pT">Enterprise SaaS · impact &amp; audit analytics</h2></div><button id="pClose" aria-label="Close portal">✕</button></div>
+   <p class="pm">Planned SaaS tiers: analytics, audit support, tax compliance workflows, <b>tax filing integration</b> (exports into your filing tools — we do not submit returns), documented giving histories, and proof-based reporting.</p>
+   <div class="kpis"><div><b>128</b><span>Needs funded</span></div><div><b>119</b><span>Releases verified</span></div><div><b>9</b><span>Awaiting proof</span></div></div>
+   <table><thead><tr><th>Need</th><th>Amount</th><th>State</th></tr></thead><tbody>
+    <tr><td>Water and hygiene kits<small>Northside Shelter</small></td><td>$1,840</td><td class="ok">Released</td></tr>
+    <tr><td>Medical supplies<small>Hope Medical Aid</small></td><td>$5,260</td><td class="lk">Locked</td></tr>
+    <tr><td>Meal vouchers<small>Open Door Services</small></td><td>$1,320</td><td class="ok">Released</td></tr>
+    <tr><td>Infant essentials<small>Family Resource Hub</small></td><td>$760</td><td class="pf">Proof sent</td></tr>
+   </tbody></table>
+   <div class="pfoot"><a class="gbtn" href="mailto:VeriChar@proton.me?subject=Enterprise%20SaaS%20tiers">Request access</a><p class="note">Illustrative sample data. Built to support audits, tax compliance, and donor transparency.</p></div>
+  </div>
 </div>
 <script>
 (()=>{
@@ -181,25 +178,25 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const views=$$('.view'),tabs=$$('.tab[data-v]');
 function show(id){
- views.forEach(v=>v.hidden=v.id!==id);
- tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
- $('main').scrollTop=0;
+  views.forEach(v=>v.hidden=v.id!==id);
+  tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
+  $('main').scrollTop=0;
 }
 $$('[data-v],[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.v||b.dataset.go)}));
 const S=[
- {t:'A charity lists a need',d:'A verified charity lists one itemized need with a price and a named vendor.',s:'Listed',r:[['Charity','Northside Shelter'],['Need','4 cases of water'],['Price','$20'],['Vendor','Metro Supply Co.']]},
- {t:'A donor funds it',d:'The gift locks in escrow on the XRP Ledger, with the vendor as the fixed destination.',s:'Locked',r:[['Escrow','$20 locked'],['Destination','Metro Supply Co.'],['No proof in time','Returned to sender']]},
- {t:'The charity submits proof',d:'The charity sends the itemized invoice and proof of delivery. It never holds the cash.',s:'Proof submitted',r:[['Invoice','Attached'],['Delivery proof','Time-stamped photo']]},
- {t:'Both proofs verified',d:'The oracle checks both. Only then is the escrow released straight to the vendor.',s:'Released',r:[['Invoice check','Passed'],['Delivery check','Passed'],['Result','$20 paid to vendor']]}
+  {t:'A charity lists a need',d:'A verified charity lists one itemized need with a price and a named vendor.',s:'Listed',r:[['Charity','Northside Shelter'],['Need','4 cases of water'],['Price','$2,400']]},
+  {t:'A donor funds it',d:'The gift locks in escrow on the XRP Ledger, with the vendor as the fixed destination.',s:'Locked',r:[['Escrow','$20 locked'],['Destination','Metro Supply Co.'],['No proof yet','Waiting for invoice']]},
+  {t:'The charity submits proof',d:'The charity sends the itemized invoice and proof of delivery. It never holds the cash.',s:'Proof submitted',r:[['Invoice','Attached'],['Delivery proof','Time-stamped'],['Status','Under review']]},
+  {t:'Both proofs verified',d:'The oracle checks both. Only then is the escrow released straight to the vendor.',s:'Released',r:[['Invoice check','Passed'],['Delivery check','Passed'],['Result','$20 sent to vendor']]}
 ];
 let i=0;
 function step(n){
- i=n;const s=S[n];
- $('#dT').textContent=s.t;$('#dD').textContent=s.d;
- $('#dR').innerHTML=s.r.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
- const c=$('#dS');c.textContent=s.s;c.dataset.s=n;
- $$('.st').forEach((b,k)=>{b.classList.toggle('done',k<n);if(k===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
- $('#dN').textContent=n<3?'Next step':'Replay demo';$('#dFull').hidden=n<3;
+  i=n;const s=S[n];
+  $('#dT').textContent=s.t;$('#dD').textContent=s.d;
+  $('#dR').innerHTML=s.r.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
+  const c=$('#dS');c.textContent=s.s;c.dataset.s=n;
+  $$('.st').forEach((b,k)=>{b.classList.toggle('done',k<n);if(k===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
+  $('#dN').textContent=n<3?'Next step':'Replay demo';$('#dFull').hidden=n<3;
 }
 $('#dN').addEventListener('click',()=>step(i<3?i+1:0));
 $$('.st').forEach((b,k)=>b.addEventListener('click',()=>step(k)));
@@ -207,43 +204,43 @@ step(0);
 const apiStatus=$('#apiStatus');
 const configuredApiBase=$('meta[name="verichar-api-base-url"]').content.trim();
 if(location.protocol==='file:'&&!configuredApiBase){
- apiStatus.textContent='Backend status unavailable: serve over HTTP(S) and configure the API URL.';
+  apiStatus.textContent='Backend status unavailable: serve over HTTP(S) and configure the API URL.';
 }else{
- const apiBase=configuredApiBase||location.origin;
- const apiUrl=new URL('/healthz',apiBase);
- if(!['http:','https:'].includes(apiUrl.protocol)){
-  apiStatus.textContent='Backend status unavailable: API URL must use HTTP(S).';
- }else{
-  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),5000);
-  fetch(apiUrl,{headers:{accept:'application/json'},cache:'no-store',credentials:'omit',signal:controller.signal})
-   .then(async response=>{
-    if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    const health=await response.json();
-    if(health.status!=='ok')throw new Error('Unexpected health response');
-    apiStatus.textContent='Backend API: online · Testnet';
-   })
-   .catch(error=>{
-    console.error('Backend health check failed:',error);
-    apiStatus.textContent=error.name==='AbortError'
-     ?'Backend API: unavailable · health check timed out'
-     :'Backend API: unavailable · check API URL and CORS configuration';
-   })
-   .finally(()=>clearTimeout(timeout));
- }
+  const apiBase=configuredApiBase||location.origin;
+  const apiUrl=new URL('/healthz',apiBase);
+  if(!['http:','https:'].includes(apiUrl.protocol)){
+   apiStatus.textContent='Backend status unavailable: API URL must use HTTP(S).';
+  }else{
+   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),5000);
+   fetch(apiUrl,{headers:{accept:'application/json'},cache:'no-store',credentials:'omit',signal:controller.signal})
+    .then(async response=>{
+     if(!response.ok)throw new Error(`HTTP ${response.status}`);
+     const health=await response.json();
+     if(health.status!=='ok')throw new Error('Unexpected health response');
+     apiStatus.textContent='Backend API: online · Testnet';
+    })
+    .catch(error=>{
+     console.error('Backend health check failed:',error);
+     apiStatus.textContent=error.name==='AbortError'
+      ?'Backend API: unavailable · health check timed out'
+      :'Backend API: unavailable · check API URL and CORS configuration';
+    })
+    .finally(()=>clearTimeout(timeout));
+  }
 }
 const P=$('#portal'),shell=['header','nav','main','footer'].map(s=>$(s));let opener=null;
 function openP(){opener=document.activeElement;shell.forEach(x=>x.inert=true);P.hidden=false;$('#pClose').focus()}
 function closeP(){P.hidden=true;shell.forEach(x=>x.inert=false);if(opener)opener.focus()}
 $('#pOpen').addEventListener('click',openP);$('#pOpen2').addEventListener('click',openP);$('#pClose').addEventListener('click',closeP);
 document.addEventListener('keydown',e=>{
- if(P.hidden)return;
- if(e.key==='Escape'){closeP();return}
- if(e.key!=='Tab')return;
- const focusable=P.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');
- if(!focusable.length){e.preventDefault();return}
- const first=focusable[0],last=focusable[focusable.length-1];
- if(e.shiftKey&&(document.activeElement===first||!P.contains(document.activeElement))){e.preventDefault();last.focus()}
- else if(!e.shiftKey&&(document.activeElement===last||!P.contains(document.activeElement))){e.preventDefault();first.focus()}
+  if(P.hidden)return;
+  if(e.key==='Escape'){closeP();return}
+  if(e.key!=='Tab')return;
+  const focusable=P.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');
+  if(!focusable.length){e.preventDefault();return}
+  const first=focusable[0],last=focusable[focusable.length-1];
+  if(e.shiftKey&&(document.activeElement===first||!P.contains(document.activeElement))){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&(document.activeElement===last||!P.contains(document.activeElement))){e.preventDefault();first.focus()}
 });
 })();
 </script>
