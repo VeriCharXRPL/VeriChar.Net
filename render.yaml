@@ -1,4 +1,6 @@
-# Render Blueprint — deploy backend only (static site is on Vercel)
+# Render Blueprint — deploy backend only
+# Source of truth for app updates: Render
+# Netlify is not used for this repository's deploy flow
 # Dashboard: New → Blueprint → connect this repo
 # Docs: https://render.com/docs/blueprint-spec
 
