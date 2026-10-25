@@ -97,7 +97,7 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 </head>
 <body>
 <header>
- <a class="wp" href="verichar-whitepaper-v0.2.pdf">Whitepaper</a>
+ <a class="wp" href="verichar-whitepaper-v0.5.pdf">Whitepaper</a>
  <a class="brand" href="#" data-go="home" aria-label="VeriChar home"><img src="assets/logo-mark.png" alt=""><span>VeriChar</span></a>
  <button class="ent" id="pOpen" aria-haspopup="dialog">Enterprise<b>Portal</b></button>
 </header>
@@ -130,7 +130,7 @@ td:nth-child(2),th:nth-child(2){text-align:right}
  <section class="view" id="founder" hidden><div class="card"><q>“I built VeriChar because real generosity deserves real accountability. Trust should be enforced by code, not demanded by slogans.”</q><p class="by">Brianne Salato, Founder and Product Architect</p><p><a href="https://x.com/VeriCharOnChain">@VeriCharOnChain on X</a><br><a href="mailto:VeriChar@proton.me">VeriChar@proton.me</a></p></div></section>
  <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>For donors.</b> Choose a specific, itemized need and follow its funding and outcome.</p><p><b>For charities.</b> Apply for verification and, if approved, publish itemized needs. Charity verification and need publishing are not live yet.</p><p><b>For vendors.</b> A proposed workflow would direct funds to vendors after the required review. Vendor payments are not live.</p></div></section>
  <section class="view" id="how" hidden><div class="card"><h2>How the proposed flow could work</h2><ol><li>A donor chooses one specific need.</li><li>In a future implementation, the donor could fund an XRPL escrow.</li><li>The charity could submit an itemized invoice and delivery evidence for review.</li><li>A reviewer or future verification service would assess the evidence.</li><li>If approved under the final rules, the escrow could be released to the vendor.</li></ol><p class="sim">This is a proposed workflow, not a live service. The simulation below makes no XRPL transactions and verifies no evidence.</p><div class="btns"><button class="cta" data-go="demo">View the simulation</button></div></div></section>
- <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations yet. Next comes the XRP Ledger test network with no real funds, then a small pilot after legal and security review.</p><p>Cryptographic proof shows a record is authentic and unaltered. It cannot prove the underlying event was honest. VeriChar makes fraud harder and easier to spot, not impossible.</p><div class="btns"><a class="ghost" href="verichar-whitepaper-v0.2.pdf">Read the whitepaper (v0.2 draft)</a></div></div></section>
+ <section class="view" id="trans" hidden><div class="card"><h2>Transparency</h2><p>VeriChar is a working prototype. It does not process real donations yet. Next comes the XRP Ledger test network with no real funds, then a small pilot after legal and security review.</p><p>Cryptographic proof shows a record is authentic and unaltered. It cannot prove the underlying event was honest. VeriChar makes fraud harder and easier to spot, not impossible.</p> <div class="btns"><a class="ghost" href="verichar-whitepaper-v0.5.pdf">Read the whitepaper (v0.5)</a></div></div></section>
  <section class="view" id="biz" hidden><div class="card"><h2>Business model</h2><p>Free for donors and charities.</p><p>Planned revenue: a 1% vendor settlement fee, and licensing audit-ready CSR data to enterprise customers.</p><p>How the fee is collected at escrow release is still an open design question.</p></div></section>
  <section class="view" id="verify" hidden><div class="card"><h2>Charity verification</h2><ol><li>Charities will be able to submit their organization profile and tax identification information for review.</li><li>The verification process and supporting-document requirements are still being designed; no IRS lookup is currently performed by this site.</li><li>Only after a future approval process is implemented should a charity be shown as verified and allowed to publish itemized needs.</li></ol><p>Free for charities. Registration isn’t open yet. Contact us to express interest.</p><div class="btns"><a class="cta" href="mailto:VeriChar@proton.me?subject=Charity%20verification%20interest">Email us</a></div></div></section>
 </main>
@@ -183,18 +183,24 @@ const configuredApiBase=$('meta[name="verichar-api-base-url"]').content.trim();
 if(location.protocol==='file:'&&!configuredApiBase){
  apiStatus.textContent='Backend status unavailable: serve over HTTP(S) and configure the API URL.';
 }else{
- const apiBase=configuredApiBase||location.origin;
- const apiUrl=new URL('/healthz',apiBase);
- if(!['http:','https:'].includes(apiUrl.protocol)){
-  apiStatus.textContent='Backend status unavailable: API URL must use HTTP(S).';
- }else{
+ let apiUrl;
+ try{
+  const apiBase=new URL(configuredApiBase||location.origin,location.href);
+  if(!['http:','https:'].includes(apiBase.protocol)||apiBase.username||apiBase.password||apiBase.pathname!=='/'||apiBase.search||apiBase.hash){
+   throw new Error('API base URL must be an HTTP(S) origin.');
+  }
+  apiUrl=new URL('/healthz',apiBase.origin);
+ }catch{
+  apiStatus.textContent='Backend status unavailable: API URL must be a valid HTTP(S) origin.';
+ }
+ if(apiUrl){
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),5000);
   fetch(apiUrl,{headers:{accept:'application/json'},cache:'no-store',credentials:'omit',signal:controller.signal})
    .then(async response=>{
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     const health=await response.json();
     if(health.status!=='ok')throw new Error('Unexpected health response');
-    apiStatus.textContent='Backend API: online · Testnet';
+    apiStatus.textContent='Backend API reachable · Testnet-only service';
    })
    .catch(error=>{
     console.error('Backend health check failed:',error);

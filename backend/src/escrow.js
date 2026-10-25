@@ -15,7 +15,7 @@
 const { xrpl } = require('./client');
 const { generateConditionPair, validateFulfillment } = require('./condition');
 const { vericharMemo } = require('./memo');
-const { submitTransaction } = require('./transactions');
+const { submitTransaction, validatePositiveDrops } = require('./transactions');
 
 /**
  * Create a conditional XRP escrow.
@@ -49,9 +49,7 @@ async function createConditionalEscrow(client, senderWallet, opts) {
   if (!destination || typeof destination !== 'string') {
     throw new Error('destination is required');
   }
-  if (!amountDrops || !/^\d+$/.test(String(amountDrops)) || BigInt(amountDrops) <= 0n) {
-    throw new Error('amountDrops must be a positive integer string');
-  }
+  validatePositiveDrops(amountDrops);
   if (!Number.isSafeInteger(cancelAfterSeconds) || cancelAfterSeconds < 1) {
     throw new Error('cancelAfterSeconds must be a positive safe integer');
   }
@@ -85,7 +83,7 @@ async function createConditionalEscrow(client, senderWallet, opts) {
     TransactionType: 'EscrowCreate',
     Account: senderWallet.address,
     Destination: destination,
-    Amount: String(amountDrops),
+    Amount: amountDrops,
     Condition: condition,
     CancelAfter: cancelAfter,
     Memos: vericharMemo(),

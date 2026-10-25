@@ -11,7 +11,7 @@
 
 const { xrpl } = require('./client');
 const { vericharMemo } = require('./memo');
-const { submitTransaction } = require('./transactions');
+const { submitTransaction, validatePositiveDrops } = require('./transactions');
 
 /**
  * Read current base and owner reserve from the network (drops).
@@ -129,15 +129,13 @@ async function checkReserveRequirement(client, address, extraOwners = 0) {
  * @returns {Promise<object>}
  */
 async function fundReserves(client, sourceWallet, destinationAddress, amountDrops) {
-  if (!/^\d+$/.test(String(amountDrops)) || BigInt(amountDrops) <= 0n) {
-    throw new Error('amountDrops must be a positive integer string');
-  }
+  validatePositiveDrops(amountDrops);
 
   const tx = {
     TransactionType: 'Payment',
     Account: sourceWallet.address,
     Destination: destinationAddress,
-    Amount: String(amountDrops),
+    Amount: amountDrops,
     Memos: vericharMemo(),
   };
 

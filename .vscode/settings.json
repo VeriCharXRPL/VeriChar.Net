@@ -6,5 +6,11 @@
         "default": true,
         "workbench.editor.chatSession": true,
         "workbench.editorinputs.searchEditorInput": true
-    }
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": null,
+    "chat.agent.maxRequests": 100,
+    "editor.mouseWheelZoom": true,
+    "editor.formatOnPaste": true,
+    "editor.allowVariableFontsInAccessibilityMode": true
 }

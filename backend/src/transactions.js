@@ -1,5 +1,17 @@
 'use strict';
 
+function validatePositiveDrops(amountDrops) {
+  if (
+    typeof amountDrops !== 'string'
+    || !/^\d+$/.test(amountDrops)
+    || BigInt(amountDrops) <= 0n
+  ) {
+    throw new Error('amountDrops must be a positive integer string');
+  }
+
+  return amountDrops;
+}
+
 function getEngineResult(transactionResult) {
   const meta = transactionResult.meta || transactionResult.metaData || {};
   return meta.TransactionResult
@@ -20,6 +32,7 @@ async function submitTransaction(client, transaction, wallet, operation) {
 }
 
 module.exports = {
+  validatePositiveDrops,
   getEngineResult,
   submitTransaction,
 };

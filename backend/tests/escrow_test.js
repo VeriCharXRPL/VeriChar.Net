@@ -32,6 +32,17 @@ describe('createConditionalEscrow validation', () => {
     );
   });
 
+  it('rejects numeric amountDrops to prevent precision loss', async () => {
+    await assert.rejects(
+      createConditionalEscrow(null, { address: 'rDummy' }, {
+        destination: 'rVendor',
+        amountDrops: 1000,
+        cancelAfterSeconds: 60,
+      }),
+      /amountDrops must be a positive integer string/
+    );
+  });
+
   it('rejects incomplete condition and fulfillment pairs', async () => {
     await assert.rejects(
       createConditionalEscrow(null, { address: 'rDummy' }, {

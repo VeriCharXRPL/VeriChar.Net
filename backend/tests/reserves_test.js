@@ -12,6 +12,18 @@ const {
 const { vericharMemo } = require('../src/memo');
 
 describe('fundReserves', () => {
+  it('rejects numeric amounts that may have lost precision', async () => {
+    await assert.rejects(
+      fundReserves(
+        null,
+        { address: 'rSource' },
+        'rDestination',
+        1000
+      ),
+      /amountDrops must be a positive integer string/
+    );
+  });
+
   it('attaches a VeriChar memo to the payment', async () => {
     const sourceWallet = { address: 'r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59' };
     let submitted;

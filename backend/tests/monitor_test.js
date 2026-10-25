@@ -1,5 +1,6 @@
 'use strict';
 
+const { EventEmitter } = require('node:events');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const {
@@ -89,5 +90,45 @@ describe('monitor', () => {
     const subscription = await watchAccount(client, 'rAccount', () => {});
 
     await assert.rejects(subscription.unsubscribe(), /unsubscribe failed/);
+  });
+
+  it('listens for transactions before completing the subscription request', async () => {
+    const client = new EventEmitter();
+    client.isConnected = () => true;
+    client.request = async ({ command }) => {
+      if (command === 'subscribe') {
+        client.emit('transaction', {
+          validated: true,
+          meta: {
+            TransactionResult: 'tesSUCCESS',
+            delivered_amount: '1000',
+          },
+        });
+      }
+    };
+
+    let received;
+    const subscription = await watchAccount(client, 'rAccount', (tx, delivered) => {
+      received = { tx, delivered };
+    });
+
+    assert.equal(received.delivered, '1000');
+    assert.equal(received.tx.validated, true);
+    await subscription.unsubscribe();
+    assert.equal(client.listenerCount('transaction'), 0);
+  });
+
+  it('removes the transaction listener when subscription fails', async () => {
+    const client = new EventEmitter();
+    client.isConnected = () => true;
+    client.request = async () => {
+      throw new Error('subscription failed');
+    };
+
+    await assert.rejects(
+      watchAccount(client, 'rAccount', () => {}),
+      /subscription failed/
+    );
+    assert.equal(client.listenerCount('transaction'), 0);
   });
 });

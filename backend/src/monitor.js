@@ -67,11 +67,6 @@ async function watchAccount(client, account, onTx) {
     throw new Error('account and onTx callback are required');
   }
 
-  await client.request({
-    command: 'subscribe',
-    accounts: [account],
-  });
-
   const handler = (tx) => {
     // Stream messages include tx_json / transaction and meta
     const normalized = {
@@ -89,16 +84,25 @@ async function watchAccount(client, account, onTx) {
   };
 
   client.on('transaction', handler);
+  try {
+    await client.request({
+      command: 'subscribe',
+      accounts: [account],
+    });
+  } catch (error) {
+    client.off('transaction', handler);
+    throw error;
+  }
 
   return {
     unsubscribe: async () => {
-      client.off('transaction', handler);
       if (client.isConnected()) {
         await client.request({
           command: 'unsubscribe',
           accounts: [account],
         });
       }
+      client.off('transaction', handler);
     },
   };
 }
