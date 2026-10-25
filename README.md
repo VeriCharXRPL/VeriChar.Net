@@ -12,13 +12,13 @@ VeriChar aims to be the gold standard (the BBB of giving): easily integrated, ch
 Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
 
 Draft documents:  
-[verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
+[verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
 
-## Architecture Direction (in progress)
+## Architecture Direction
 
-We are moving toward a structure where each verified 501(c)(3) receives a dedicated XRPL account under controlled multi-signature rules. Escrows on that account still require dual proof (invoice + delivery) before funds can be released to a vendor. This improves the path to tax compliance while preserving the pure verification model.
+Each verified 501(c)(3) receives a dedicated XRPL account under controlled multi-signature rules. Escrows on that account still require dual proof (invoice + delivery) before funds can be released to a vendor. This improves the path to tax compliance while preserving the pure verification model.
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for the detailed design, aligned with official XRPL multi-signing and escrow documentation.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) and [verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md).
 
 ## Giving Network (free)
 
