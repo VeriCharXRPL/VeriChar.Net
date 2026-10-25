@@ -1,22 +1,36 @@
 # VeriChar.Net
 
-**Verifiable giving on XRPL.** Charity people can actually verify.
+**The verification standard for charitable giving on XRPL.**  
+Proof before payment. Charity people can actually verify.
 
-**How:** Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor. Proof before payment. Documented trails when settlement is live.
+VeriChar aims to be the gold standard (the BBB of giving): easily integrated, cheap, efficient, and compliant, while enforcing that funds only move after itemized invoice + proof of delivery are verified.
 
-**Giving network (free):** Donors, charities, and vendors — no settlement take-rate.
+**Core principle:** Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor. The charity never freely controls the cash.
 
-**Enterprise SaaS tiers (paid):** Analytics to streamline audits and CSR/impact reporting; **tax compliance workflows**; planned **tax filing integration** (structured exports / connections into the filing software or advisor workflow you already use — VeriChar does not submit returns to the IRS or other agencies); clearer documentation of giving; less stress and overhead. Not legal or tax advice. Goal: more of each gift reaches the need, with proof that is faster and easier to show.
+## Current Status
 
-**Also:** Donations to VeriChar to fund the public rails.
+Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
 
-**Status:** Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
+Draft documents:  
+[verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
 
-Draft: [verichar-whitepaper-v0.7.pdf](./verichar-whitepaper-v0.7.pdf) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
+## Architecture Direction (in progress)
+
+We are moving toward a structure where each verified 501(c)(3) receives a dedicated XRPL account under controlled multi-signature rules. Escrows on that account still require dual proof (invoice + delivery) before funds can be released to a vendor. This improves the path to tax compliance while preserving the pure verification model.
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the detailed design, aligned with official XRPL multi-signing and escrow documentation.
+
+## Giving Network (free)
+
+Donors, charities, and vendors — no settlement take-rate on core giving flows.
+
+## Enterprise SaaS (paid)
+
+Analytics for audits and CSR/impact reporting, tax compliance workflows, and structured exports. Not legal or tax advice.
 
 ## XRPL Testnet verification status
 
-Backend integration tests run on every push to `main` (GitHub Actions). Live **XRP Ledger Testnet** checks include faucet wallets, conditional EscrowCreate / EscrowFinish / EscrowCancel, fee formula per xrpl.org, vendor balance change, and reserve reads. Recent CI: **37 tests, 0 failures** (22 October 2026). Not Mainnet. Not live donations.
+Backend integration tests run on every push to `main` (GitHub Actions). Live **XRP Ledger Testnet** checks include faucet wallets, conditional EscrowCreate / EscrowFinish / EscrowCancel, fee formula per xrpl.org, vendor balance change, and reserve reads.
 
 ## Backend
 
