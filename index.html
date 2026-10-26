@@ -43,6 +43,7 @@
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
 body{display:flex;flex-direction:column;background:var(--navy);color:var(--ink);font:400 16px/1.5 'Instrument Sans',system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header,nav,footer{flex-shrink:0}
 header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;padding:8px 14px}
 .brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;text-decoration:none}
 .brand img{height:34px;width:auto}
@@ -50,14 +51,14 @@ header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align
 .wp{justify-self:start;font-size:13px;color:var(--muted);text-decoration:none}
 .ent{justify-self:end;display:grid;gap:1px;text-align:center;line-height:1.1;padding:6px 11px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2));color:#1b1406;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer}
 .ent b{font:600 14px 'Newsreader',Georgia,serif;letter-spacing:0}
-nav{border-bottom:2px solid var(--teal)}
-.tabs{display:flex;gap:2px;overflow-x:auto;padding:2px 10px 2px 8px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
+nav{position:relative;z-index:2;background:var(--navy);border-bottom:2px solid var(--teal)}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:0;overflow:visible;padding:0 6px}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;border:0;background:none;color:var(--muted);font:500 14px 'Instrument Sans',sans-serif;padding:8px 11px;border-radius:999px;cursor:pointer}
+.tab{flex:none;border:0;background:none;color:var(--muted);font:500 13px 'Instrument Sans',sans-serif;padding:7px 9px;border-radius:999px;cursor:pointer}
 .r1 .tab{color:var(--soft);font-size:15px;border-radius:0}
 .r1 .tab[aria-current]{color:#fff;box-shadow:inset 0 -2px var(--teal)}
 .r2 .tab[aria-current]{background:var(--red);color:#fff}
-main{flex:1;min-height:0;overflow-y:auto;display:flex;padding:10px 16px;justify-content:center;align-items:center}
+main{flex:1;min-height:0;overflow-y:auto;display:flex;padding:8px 16px 12px;justify-content:center;align-items:flex-start}
 .view{margin:0 auto;width:100%;max-width:760px}
 .view[hidden],[hidden]{display:none!important}
 .hero{text-align:center;display:flex;flex-direction:column;align-items:center;max-width:760px;margin:0 auto}
@@ -110,9 +111,9 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 .pfoot{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px}
 .gbtn{padding:11px 20px;border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2));color:#1b1406;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none}
 .note{flex:1;min-width:180px;color:var(--muted);font-size:12px}
-@media (max-width:380px){.brand span{font-size:20px}.brand img{height:30px}}
+@media (max-width:480px){.hero img{max-width:54%;max-height:108px}h1{font-size:clamp(26px,7.4vw,36px)}}
 @media (max-width:340px){header{padding:6px 10px;gap:6px}.brand{gap:6px}.brand span{font-size:18px}.brand img{height:28px}.ent{padding:5px 8px}}
-@media (max-height:640px){.pm{font-size:14px;margin-top:4px}td small{display:none}.card h2{font-size:20px}dl{font-size:14px}header{padding:4px 12px}.tab{padding:6px 10px}main{padding:6px 14px}.hero img{max-height:20vh}}
+@media (max-height:640px){.pm{font-size:14px;margin-top:4px}td small{display:none}.card h2{font-size:20px}dl{font-size:14px}header{padding:4px 12px}.tab{padding:6px 8px}main{padding:6px 14px}.hero img{max-height:min(18vh,108px)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -179,7 +180,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const views=$$('.view'),tabs=$$('.tab[data-v]');
 function show(id){
   views.forEach(v=>v.hidden=v.id!==id);
-  tabs.forEach(t=>{if(t.dataset.v===id){t.setAttribute('aria-current','page');t.scrollIntoView({inline:'center',block:'nearest'})}else t.removeAttribute('aria-current')});
+  tabs.forEach(t=>{if(t.dataset.v===id)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
   $('main').scrollTop=0;
 }
 $$('[data-v],[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.v||b.dataset.go)}));
