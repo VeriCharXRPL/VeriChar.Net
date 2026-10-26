@@ -13,7 +13,7 @@ Founder and Product Architect
 
 ## Document status
 
-This is **Version 0.7**, a draft. It replaces Version 0.6 for product and business-model accuracy as of **22 October 2026**. On **23 October 2026**, sections 10 and 11 were updated with the XRPL controls enforced in the repo and the Illinois registration gates. The published PDF can lag this Markdown until the next PDF build.
+This is **Version 0.7**, a draft. It replaces Version 0.6 for product and business-model accuracy as of **22 October 2026**. On **23 October 2026**, sections 10 and 11 were updated with the XRPL controls enforced in the repo and the Illinois registration gates. On **25 October 2026**, the business model was stated as VeriChar Conditional Escrow: a verified 501(c)(3), that charity’s own XRPL account, and one conditional lock per gift. VeriChar is not a donor-advised fund. The published PDF can lag this Markdown until the next PDF build.
 
 **What changed from 0.6**
 
@@ -126,11 +126,11 @@ The sequence below is the **intended** flow. The public simulation shows these s
 
 ### Building blocks (intended)
 
-**Verified charities.** The intended check binds an organization to its EIN (or equivalent) and to a wallet address. The XRPL supports a two-way link between an account and a domain: the account’s Domain field plus an `xrp-ledger.toml` file hosted at that domain **[S12]**. The EIN check itself happens off-ledger. XRPL Credentials are another possible fit: an issuer creates a credential for a subject account, and the subject must accept it **[S19]** *(to be confirmed for VeriChar)*. **None of this runs on the website today.** There is no IRS lookup, and no charity is marked verified.
+**Verified charities.** A charity joins only after a 501(c)(3) check. That organization then uses its own XRPL account. The account is the public home of that charity’s locks, not a VeriChar pooled wallet. The intended check binds the organization to its EIN (or equivalent) and to that account. The XRPL supports a two-way link between an account and a domain: the account’s Domain field plus an `xrp-ledger.toml` file hosted at that domain **[S12]**. The EIN check itself happens off-ledger. XRPL Credentials are another possible fit: an issuer creates a credential for a subject account, and the subject must accept it **[S19]** *(to be confirmed for VeriChar)*. **None of this runs on the website today.** There is no IRS lookup, and no charity is marked verified.
 
 **Itemized needs.** A charity would list a specific need with a price and a named vendor, for example “4 cases of water — $20.” Donors would fund that item, not a general pool. **Need publishing is not live.**
 
-**Escrow.** The donation would lock in an escrow on the XRP Ledger. An escrow locks XRP or fungible tokens that cannot be used or destroyed until conditions are met **[S17]**. The escrow names its recipient (the vendor) when it is created; finishing it delivers the funds to that recipient **[S17]**. **VeriChar does not yet create escrows in production.** Backend modules exist for Testnet experimentation (conditions, escrow helpers, reserves, monitoring patterns).
+**Escrow.** Each gift is its own conditional escrow for that verified charity. Gifts are not pooled. An escrow locks XRP or fungible tokens that cannot be used or destroyed until conditions are met **[S17]**. The escrow names its recipient (the vendor) when it is created; finishing it delivers the funds to that recipient **[S17]**. The charity’s XRPL account is the account the lock is accounted to. **VeriChar does not yet create escrows in production.** Backend modules exist for Testnet experimentation (conditions, escrow helpers, reserves, monitoring patterns).
 
 **Two proofs.** The charity would submit an itemized invoice and proof of delivery. Delivery proof may be a time-stamped, GPS-checked photo, a carrier confirmation, or a signed receipt, depending on the item. **The site does not accept uploads.** The dual-layer oracle in code is a **structured stub** (always fails until real OCR / EXIF / carrier checks are implemented).
 
@@ -210,7 +210,7 @@ Three interfaces are planned: donor experience, charity portal, and enterprise C
 
 **Donors (intended).** Browse verified charities and itemized needs; fund one need; follow escrow state on a public explorer; optional receipt path. **Free.**
 
-**Charities (intended).** Apply for verification; publish itemized needs; submit invoice and delivery evidence; never custody donor funds. **Free.** Registration is not open yet.
+**Charities (intended).** Pass a 501(c)(3) check, use their own XRPL account, publish itemized needs, and submit invoice and delivery evidence. Each gift is a separate conditional escrow on that charity’s trail. They do not spend a pooled donor balance. **Free.** Registration is not open yet.
 
 **Vendors (intended).** Named as escrow destination; receive funds only after approved proofs. **Free to participate** — no percentage taken from the payout as a platform settlement fee.
 
@@ -237,6 +237,10 @@ Three interfaces are planned: donor experience, charity portal, and enterprise C
 ### Free for the giving network
 
 **Donors, charities, and vendors pay $0 in platform settlement fees.** There is **no 1% vendor fee** and no take-rate on escrow release for ordinary giving flows.
+
+The business model is **VeriChar Conditional Escrow**: a verified 501(c)(3), that charity’s own XRPL account, and one conditional lock per gift. A corporation or large donor can follow each lock from create to release. That is the audit trail. It is also what supports tax records.
+
+**Tax line.** The charity issues any charitable substantiation. VeriChar does not issue the deduction, does not file returns, and is **not** a donor-advised fund. A DAF is a sponsoring charity that holds advised funds. VeriChar is the lock-and-trail layer. Calling it a DAF would claim a different legal job.
 
 Network participants still face **XRPL network costs** (XRP fees and reserves) when the ledger path is live; those are protocol costs, not VeriChar revenue.
 
@@ -332,7 +336,7 @@ Readers should prefer the **current** XRPL.org pages over any frozen snapshot. R
 
 ## Appendix B. Open design questions
 
-1. Which account owns each escrow and who funds owner reserves?  
+1. The charity’s own XRPL account is the account each conditional escrow is accounted to. Who signs `EscrowCreate`, and who funds the owner reserve, is still an implementation choice. VeriChar does not take a spendable pooled balance.  
 2. Can RLUSD be escrowed under current issuer settings on Testnet/Mainnet?  
 3. Guest wallet creation and funding without trapping donors in key management.  
 4. Oracle governance: single operator vs multi-party release.  
