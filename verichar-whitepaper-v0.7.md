@@ -75,14 +75,12 @@ Charitable giving runs on trust, and trust is hard to verify. Donors rarely see 
 
 **VeriChar (Verified Charity On-Chain)** is a verification layer for charitable giving, built on the XRP Ledger (XRPL).
 
-**Transparency. Compliance. Ease.** The lock is public. The charity is a verified 501(c)(3) and keeps the tax record. Each gift is one conditional escrow, so a corporation can audit it without a chase.
-
 **Intended design**
 
 - Every donation funds **one specific, itemized need**.
 - Funds are intended to be paid in **RLUSD** (a USD stablecoin on the XRPL) where escrow of that asset is confirmed feasible; XRP remains required for fees and reserves.
 - Funds **lock in escrow** on the ledger and **release directly to the vendor** only when **two proofs** are verified: an **itemized merchant invoice** and **proof of delivery**.
-- The charity’s own XRPL account is the home of each conditional lock. The charity does not spend a pooled balance.
+- The **charity never holds the cash**.
 - Settlement steps are written to a **public ledger** that anyone can audit.
 
 That design is **not operating with real money today**. VeriChar does not currently process real donations.
