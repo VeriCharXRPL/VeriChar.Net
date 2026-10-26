@@ -132,6 +132,29 @@
 			],
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Inspect Git state",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"status",
+				"--short",
+				"--branch"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Review Git changes",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"git diff --stat; git diff --cached --stat; git diff -- .vscode/settings.json .vscode/tasks.json; git diff --cached -- .vscode/settings.json .vscode/tasks.json; git --no-pager log -4 --oneline --decorate; git remote -v"
+			],
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }
