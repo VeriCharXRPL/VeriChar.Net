@@ -1,6 +1,6 @@
 # VeriChar Whitepaper
 
-**Verifiable giving on the XRP Ledger**  
+**Verifiable charity on chain**  
 *Proof before payment. The gold standard for charitable verification.*
 
 **Brianne Salato**  
@@ -34,7 +34,7 @@ VeriChar remains a **working prototype**. The public website and demonstration a
 
 Charitable giving still runs on trust that is hard to verify. Money moves first. Proof comes later — if at all.
 
-**VeriChar** is the verification and settlement standard for charitable giving on the XRP Ledger. The goal is to become the **gold standard** — the BBB of giving: strict, transparent, cheap to use, easy to integrate, and designed for compliance without abandoning pure intent.
+**VeriChar** is the verification and settlement standard for charitable giving on the XRP Ledger. The goal is the **gold standard** — the BBB of giving: strict, transparent, cheap to use, easy to integrate, and designed for compliance without abandoning pure intent.
 
 **Core rules (non-negotiable)**
 
