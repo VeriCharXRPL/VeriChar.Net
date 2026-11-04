@@ -5,6 +5,7 @@
 | Field | Value |
 |---|---|
 | Product | VeriChar / VeriChar.Net |
+| Tagline | Verifiable charity on chain · Proof before payment |
 | Founder | Brianne Salato |
 | Roles | Founder and Product Architect; **XRPL Developer** |
 | Email | VeriChar@proton.me |
