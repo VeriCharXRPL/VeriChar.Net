@@ -1,34 +1,34 @@
 # VeriChar.Net
 
-**The verification standard for charitable giving on XRPL.**  
+**Verifiable charity on chain.**  
 Proof before payment. Charity people can actually verify.
 
-VeriChar aims to be the gold standard (the BBB of giving): easily integrated, cheap, efficient, and compliant, while enforcing that funds only move after itemized invoice + proof of delivery are verified.
+VeriChar is the verification standard for charitable giving on the XRP Ledger. The goal is the gold standard for giving: strict, transparent, cheap to use, easy to integrate, and designed for compliance — without abandoning pure intent.
 
-**Core principle:** Funds lock until an itemized invoice and proof of delivery check out — then they go straight to the vendor. The charity never freely controls the cash.
+**Core principle:** Funds lock until an itemized invoice and proof of delivery both check out. Then they release straight to the vendor. The charity never freely controls the cash.
 
-## Current Status
+## Current status
 
-Working prototype. Public demo is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
+Working prototype. The public site is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
 
-Draft documents:  
+**Draft documents**  
 [verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
 
-## Architecture Direction
+## Architecture direction
 
-Each verified 501(c)(3) receives a dedicated XRPL account under controlled multi-signature rules. Escrows on that account still require dual proof (invoice + delivery) before funds can be released to a vendor. This improves the path to tax compliance while preserving the pure verification model.
+Each verified 501(c)(3) receives a dedicated XRPL account under controlled multi-signature rules. Escrows on that account require dual proof (invoice + delivery) before funds can release to a vendor. This improves the path to tax compliance while preserving the pure verification model.
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) and [verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md).
 
-## Giving Network (free)
+## Giving network (free)
 
 Donors, charities, and vendors — no settlement take-rate on core giving flows.
 
 ## Enterprise SaaS (paid)
 
-Analytics for audits and CSR/impact reporting, tax compliance workflows, and structured exports. Not legal or tax advice.
+Analytics for audits and CSR/impact reporting, tax-compliance workflows, and structured exports. Not legal or tax advice. VeriChar does not file returns.
 
-## XRPL Testnet verification status
+## XRPL Testnet verification
 
 Backend integration tests run on every push to `main` (GitHub Actions). Live **XRP Ledger Testnet** checks include faucet wallets, conditional EscrowCreate / EscrowFinish / EscrowCancel, fee formula per xrpl.org, vendor balance change, and reserve reads.
 
@@ -38,4 +38,11 @@ Backend integration tests run on every push to `main` (GitHub Actions). Live **X
 cd backend && npm ci && npm test && npm start
 ```
 
-See [backend/.env.example](./backend/.env.example) and [API-DESIGN.md](./API-DESIGN.md). Public page uses `/healthz` only; browser never receives an API token.
+See [backend/.env.example](./backend/.env.example) and [API-DESIGN.md](./API-DESIGN.md). The public page uses `/healthz` only; the browser never receives an API token.
+
+## Links
+
+- Site: [verichar.net](https://verichar.net)
+- XRPL docs: [xrpl.org](https://xrpl.org)
+- Ripple: [ripple.com](https://ripple.com)
+- X: [@VeriCharOnChain](https://x.com/VeriCharOnChain)
