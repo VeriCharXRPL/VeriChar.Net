@@ -101,7 +101,7 @@ This is the structural change introduced in v0.8. It keeps pure intent while imp
 
 **Verified charities** — EIN (or equivalent) check + identity binding + dedicated account.  
 **Itemized needs** — specific goods/services with named vendor and price.  
-**Conditional escrow** — PREIMAGE-SHA-256 (or successor) conditions; mandatory expiry.  
+**Conditional escrow** — PREIMAGE-SHA-256 (the only supported crypto-condition type on XRPL) with mandatory expiry (`CancelAfter`).  
 **Dual proofs** — invoice match + delivery evidence; both required.  
 **Direct vendor settlement** — charity does not take intermediate custody of spendable cash.
 
@@ -112,7 +112,7 @@ This is the structural change introduced in v0.8. It keeps pure intent while imp
 ### Ledger layer (XRPL)
 
 - Native **EscrowCreate / EscrowFinish / EscrowCancel**.  
-- Conditional escrows with crypto-conditions.  
+- Conditional escrows with PREIMAGE-SHA-256 crypto-conditions.  
 - **Multi-signing** (SignerListSet) on each charity’s dedicated account.  
 - Public, validated ledger records for every material step.
 
@@ -125,18 +125,26 @@ Key references (xrpl.org):
 ### Control model
 
 1. Dedicated account created and linked to the verified 501(c)(3).  
-2. SignerList set with quorum/weights that prevent unilateral bypass of proof requirements.  
-3. EscrowCreate locks funds for a specific need with vendor destination and CancelAfter.  
-4. EscrowFinish occurs only after dual proofs are accepted and the correct fulfillment is supplied.  
+2. SignerList set with quorum/weights that prevent unilateral bypass of proof requirements. Note: the account itself cannot appear in its own SignerList.  
+3. EscrowCreate locks funds for a specific need with vendor destination and mandatory `CancelAfter`.  
+4. EscrowFinish occurs only after dual proofs are accepted and the correct fulfillment is supplied. Whoever holds the fulfillment can finish the escrow.  
 5. Failed or expired paths return funds per escrow rules.
+
+### Reserves
+
+Each open escrow counts as one object toward the sender’s owner reserve. On Mainnet the current figures are approximately 1 XRP base reserve + 0.2 XRP per owned object (subject to fee voting). The charity’s dedicated account bears this reserve for every open escrow until it is finished or canceled.
 
 ### Verification layer
 
-Application-level dual-check (invoice + delivery). Only then is the fulfillment used. Current public product still uses stubs; Testnet helpers exist.
+Application-level dual-check (invoice + delivery). Only then is the fulfillment used. Current public product still uses stubs; Testnet helpers exist. Fulfillment custody is an operational security control.
 
 ### Application layer
 
 Donor experience, charity portal, enterprise CSR tooling. Public site remains simulation until productized settlement is ready.
+
+### Token / RLUSD path
+
+Token escrow (including potential RLUSD) is enabled by the TokenEscrow amendment. Additional issuer-side constraints (AllowTrustLineLocking, pre-authorization requirements) apply. These remain to be confirmed on Testnet before any production design assumes them.
 
 ---
 
@@ -166,9 +174,9 @@ Illinois registration and other jurisdictional requirements remain in scope as p
 
 ## 7. Security and risk
 
-- Fulfillment custody must be guarded.  
-- Multi-sig recovery and key management are operational responsibilities.  
-- Escrows must carry expiry to avoid permanent lock.  
+- Fulfillment custody must be guarded. Whoever holds the fulfillment can finish the escrow.  
+- Multi-sig recovery and key management are operational responsibilities. The charity account cannot be a member of its own SignerList.  
+- Escrows must carry `CancelAfter` to avoid permanent lock.  
 - Cryptographic and ledger records prove authenticity of records; they do not by themselves prove real-world honesty. The system makes misuse harder and more visible.
 
 ---
@@ -199,9 +207,9 @@ No opacity. No ambiguity. No unverifiable release.
 ## Appendix — Open design questions
 
 - Exact SignerList quorum and recovery procedures.  
-- RLUSD escrow feasibility and configuration on Testnet.  
+- RLUSD escrow feasibility and configuration on Testnet (issuer flags and pre-authorization).  
 - Oracle operational model and fulfillment custody.  
-- Minimum gift size after measured XRPL costs.  
+- Minimum gift size after measured XRPL costs (including owner reserves).  
 - Final tax-counsel-approved acknowledgment and documentation package.
 
 ---
