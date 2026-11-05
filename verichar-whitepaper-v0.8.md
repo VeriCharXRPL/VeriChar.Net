@@ -1,12 +1,12 @@
 # VeriChar Whitepaper
 
 **Verifiable charity on chain**  
-*Proof before payment. The gold standard for charitable verification.*
+*Charity infrastructure built for transparency and proof.*
 
 **Brianne Salato**  
 Founder and Product Architect
 
-**Version 0.8 (Draft)** · 25 October 2026  
+**Version 0.8 (Draft)** · 5 November 2026  
 [verichar.net](https://verichar.net) · [VeriChar@proton.me](mailto:VeriChar@proton.me) · X: [@VeriCharOnChain](https://x.com/VeriCharOnChain)
 
 ---
@@ -36,6 +36,9 @@ Charitable giving still runs on trust that is hard to verify. Money moves first.
 
 **VeriChar** is the verification and settlement standard for charitable giving on the XRP Ledger. The goal is the **gold standard** — the BBB of giving: strict, transparent, cheap to use, easy to integrate, and designed for compliance without abandoning pure intent.
 
+We built the code to eliminate unverifiable charity flows.  
+Proof before payment. Encoded integrity.
+
 **Core rules (non-negotiable)**
 
 - Proof comes **before** payment.
@@ -43,6 +46,7 @@ Charitable giving still runs on trust that is hard to verify. Money moves first.
 - Funds release **directly to the vendor**.
 - The charity does **not** freely control or spend the funds.
 - Every settlement step is recorded on a **public ledger**.
+- No opacity. No ambiguity. No unverifiable release.
 
 **Architecture direction (v0.8)**
 
@@ -188,6 +192,8 @@ The answer is proof before payment on the XRP Ledger: itemized needs, dedicated 
 
 The pure intent remains. The structure in this version is the practical path toward making that intent the gold standard others can integrate and trust.
 
+No opacity. No ambiguity. No unverifiable release.
+
 ---
 
 ## Appendix — Open design questions
@@ -200,4 +206,4 @@ The pure intent remains. The structure in this version is the practical path tow
 
 ---
 
-*Version 0.8 (Draft) · 25 October 2026 · verichar.net*
+*Version 0.8 (Draft) · 5 November 2026 · verichar.net*
