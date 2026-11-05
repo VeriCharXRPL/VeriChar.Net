@@ -1,11 +1,14 @@
 # VeriChar.Net
 
 **Verifiable charity on chain.**  
-Proof before payment. Charity people can actually verify.
+Charity infrastructure built for transparency and proof.
 
-VeriChar is the verification standard for charitable giving on the XRP Ledger. The goal is the gold standard for giving: strict, transparent, cheap to use, easy to integrate, and designed for compliance — without abandoning pure intent.
+We built the code to eliminate unverifiable charity flows.  
+Proof before payment. Encoded integrity.
 
 **Core principle:** Funds lock until an itemized invoice and proof of delivery both check out. Then they release straight to the vendor. The charity never freely controls the cash.
+
+No opacity. No ambiguity. No unverifiable release.
 
 ## Current status
 
