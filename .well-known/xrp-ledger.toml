@@ -3,12 +3,17 @@
 
 [METADATA]
 version = 1
-modified = "2026-10-24T00:00:00.000Z"
+modified = "2026-11-05T21:00:00.000Z"
 
 [[ACCOUNTS]]
 address = "rBrwJxEff3gEiL2cTFRVDyJ6jJxLpJZqiU"
 network = "main"
-desc = "VeriChar main account"
+desc = "VeriChar main account (Mainnet)"
+
+[[ACCOUNTS]]
+address = "rJWGCzJ9WVuYDmQeJJ7QrSRHUaqNknb7yz"
+network = "testnet"
+desc = "VeriChar Testnet account (development)"
 
 [PRINCIPALS]
 name = "Brianne Salato"
