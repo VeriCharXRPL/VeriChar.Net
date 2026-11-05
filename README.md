@@ -15,7 +15,7 @@ No opacity. No ambiguity. No unverifiable release.
 Working prototype. The public site is a simulation. Backend escrow helpers pass live **XRP Ledger Testnet** CI. No real donations or Mainnet funds.
 
 **Draft documents**  
-[verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
+[verichar-whitepaper-v0.8.md](./verichar-whitepaper-v0.8.md) · [verichar-whitepaper-v0.8.pdf](./verichar-whitepaper-v0.8.pdf) · [ARCHITECTURE.md](./ARCHITECTURE.md) · [verichar-whitepaper-v0.7.md](./verichar-whitepaper-v0.7.md) · [PUBLIC-IDENTITY.md](./PUBLIC-IDENTITY.md) · [SECURITY.md](./SECURITY.md)
 
 ## Architecture direction
 
