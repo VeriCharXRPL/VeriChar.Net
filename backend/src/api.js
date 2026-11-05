@@ -6,6 +6,10 @@ const xrpl = require('xrpl');
 const { API_TOKENS, API_CORS_ORIGINS } = require('./config');
 const { connectClient } = require('./client');
 const {
+  issueEinCredential,
+  acceptEinCredential,
+} = require('./einCredential');
+const {
   ComplianceClosed,
   assertMayAcceptDonation,
   assertMayIssueTaxReceipt,
@@ -73,6 +77,18 @@ function refuseProductDoor(response, action) {
   return sendJson(response, 403, { error: 'compliance_closed', action });
 }
 
+async function readBody(request) {
+  const chunks = [];
+  for await (const chunk of request) chunks.push(chunk);
+  const raw = Buffer.concat(chunks).toString('utf8');
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 function createApiServer({
   tokenRecords = API_TOKENS,
   corsOrigins = API_CORS_ORIGINS,
@@ -95,8 +111,76 @@ function createApiServer({
       return refuseProductDoor(response, door);
     }
 
+    // POST /v1/networks/testnet/credentials — create public EIN credential (Testnet lab)
+    if (request.method === 'POST' && url.pathname === '/v1/networks/testnet/credentials') {
+      const principal = authenticate(request, tokenRecords);
+      if (!principal) {
+        return sendJson(response, 401, { error: 'unauthorized' });
+      }
+      if (!principal.scopes.includes('ledger:read')) {
+        return sendJson(response, 403, { error: 'insufficient_scope' });
+      }
+
+      const body = await readBody(request);
+      if (body === null) {
+        return sendJson(response, 400, { error: 'invalid_json' });
+      }
+
+      const { issuerSeed, subjectAddress, ein, action } = body;
+      if (typeof ein !== 'string' || !ein.startsWith('EIN-') || ein.length > 64) {
+        return sendJson(response, 400, { error: 'invalid_ein' });
+      }
+      if (!xrpl.isValidAddress(subjectAddress)) {
+        return sendJson(response, 400, { error: 'invalid_subject' });
+      }
+      if (typeof issuerSeed !== 'string' || !issuerSeed) {
+        return sendJson(response, 400, { error: 'invalid_issuer_seed' });
+      }
+
+      let issuerWallet;
+      try {
+        issuerWallet = xrpl.Wallet.fromSeed(issuerSeed);
+      } catch {
+        return sendJson(response, 400, { error: 'invalid_issuer_seed' });
+      }
+
+      let client;
+      try {
+        client = await openTestnetClient();
+
+        if (action === 'accept') {
+          const subjectWallet = issuerWallet; // caller supplies subject seed as issuerSeed when accepting
+          const result = await acceptEinCredential(client, subjectWallet, body.issuerAddress, ein);
+          await client.disconnect();
+          return sendJson(response, 200, {
+            network: 'testnet',
+            action: 'accept',
+            result: result.result.meta.TransactionResult,
+            hash: result.result.hash,
+          });
+        }
+
+        const result = await issueEinCredential(client, issuerWallet, subjectAddress, ein);
+        await client.disconnect();
+        return sendJson(response, 200, {
+          network: 'testnet',
+          action: 'create',
+          result: result.result.meta.TransactionResult,
+          hash: result.result.hash,
+          issuer: issuerWallet.address,
+          subject: subjectAddress,
+          ein,
+        });
+      } catch (err) {
+        if (client?.isConnected()) {
+          try { await client.disconnect(); } catch { /* ignore */ }
+        }
+        return sendJson(response, 502, { error: 'testnet_unavailable', detail: err.message });
+      }
+    }
+
     if (request.method !== 'GET') {
-      response.setHeader('allow', 'GET');
+      response.setHeader('allow', 'GET, POST');
       return sendJson(response, 405, { error: 'method_not_allowed' });
     }
 
