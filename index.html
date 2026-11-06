@@ -205,10 +205,6 @@ td:nth-child(2),th:nth-child(2){text-align:right}
   <section class="view" id="why" hidden>
    <div class="card">
     <h2>Why XRPL</h2>
-    <p><b>VeriChar has domain-linked accounts on XRPL Mainnet and Testnet.</b> XRPL provides a public settlement record and native conditional escrow; the backend creates, finishes, and cancels XRP escrows on Testnet, with integration tests exercising those ledger flows.</p>
-    <p>The intended model gives each verified charity its own account and uses a separate escrow for each need, with the vendor fixed as the destination. Release uses a crypto-condition fulfillment after invoice and delivery evidence are reviewed. XRPL records the transaction and settlement trail for public audit; evidence review remains an operational responsibility.</p>
-    <p>This design makes fund movement and release conditions directly verifiable, reducing reliance on opaque internal records. Charity qualification and applicable legal and compliance requirements remain part of deployment.</p>
-
     <div class="video-wrap" id="bgVideo">
      <button type="button" class="video-poster" id="bgPlay" aria-label="Play Brad Garlinghouse video">
       <img src="assets/logo-hero.png" alt="" class="video-logo" width="220" height="80">
@@ -219,6 +215,10 @@ td:nth-child(2),th:nth-child(2){text-align:right}
      </button>
      <div class="video-frame" id="bgFrame"></div>
     </div>
+
+    <p><b>VeriChar has domain-linked accounts on XRPL Mainnet and Testnet.</b> XRPL provides a public settlement record and native conditional escrow; the backend creates, finishes, and cancels XRP escrows on Testnet, with integration tests exercising those ledger flows.</p>
+    <p>The intended model gives each verified charity its own account and uses a separate escrow for each need, with the vendor fixed as the destination. Release uses a crypto-condition fulfillment after invoice and delivery evidence are reviewed. XRPL records the transaction and settlement trail for public audit; evidence review remains an operational responsibility.</p>
+    <p>This design makes fund movement and release conditions directly verifiable, reducing reliance on opaque internal records. Charity qualification and applicable legal and compliance requirements remain part of deployment.</p>
 
     <p class="official-links">
      <a href="https://xrpl.org/" target="_blank" rel="noopener noreferrer">xrpl.org</a>
@@ -302,7 +302,9 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 'use strict';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const views=$$('.view'),tabs=$$('.tab[data-v]');
+let stopWhyVideo=()=>{};
 function show(id){
+  if(id!=='why')stopWhyVideo();
   views.forEach(v=>v.hidden=v.id!==id);
   tabs.forEach(t=>{if(t.dataset.v===id)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
   $('main').scrollTop=0;
@@ -333,13 +335,18 @@ step(0);
   if(!wrap) return;
   const poster = $('#bgPlay');
   const frame = $('#bgFrame');
+  stopWhyVideo = () => {
+    frame.replaceChildren();
+    frame.classList.remove('is-visible');
+    poster.classList.remove('is-fading');
+  };
   poster.addEventListener('click', () => {
     frame.innerHTML = '<iframe src="https://www.youtube.com/embed/CjQLbj6n87c?autoplay=1&rel=0" title="Brad Garlinghouse explains XRP / XRPL (CNN)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>';
     requestAnimationFrame(() => {
       poster.classList.add('is-fading');
       frame.classList.add('is-visible');
     });
-  }, {once: true});
+  });
 })();
 
 const apiStatus=$('#apiStatus');
