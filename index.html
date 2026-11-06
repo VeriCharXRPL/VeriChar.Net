@@ -51,9 +51,9 @@ header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align
 .brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;text-decoration:none;white-space:nowrap}
 .brand img{height:38px;width:auto;object-fit:contain;display:block;flex-shrink:0}
 .brand span{font:600 22px/1.1 'Newsreader',Georgia,serif;letter-spacing:.02em;display:inline-block;white-space:nowrap}
-.wp{position:relative;justify-self:start;font-size:13px;color:#fff;text-decoration:none;text-shadow:0 0 8px rgba(255,255,255,.55)}
+.wp{position:relative;justify-self:start;padding:6px 11px;border:1px solid rgba(255,255,255,.8);border-radius:10px;background:linear-gradient(135deg,#fff,#aeb8c5);color:#182637;text-decoration:none;text-align:center;font:600 13px 'Instrument Sans',sans-serif;box-shadow:0 0 12px rgba(255,255,255,.22)}
 .wp::after,.ent::after{position:absolute;content:"✦";animation:sparkle 2.8s ease-in-out infinite}
-.wp::after{top:-7px;right:-9px;color:#fff;font-size:11px;text-shadow:0 0 7px #fff}
+.wp::after{top:-7px;right:-7px;color:#fff;font-size:11px;text-shadow:0 0 7px #fff}
 .ent{position:relative;justify-self:end;display:grid;gap:1px;text-align:center;line-height:1.1;padding:6px 11px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#f8ebc2,var(--gold2));color:#1b1406;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer}
 .ent::after{top:-7px;right:-7px;color:var(--gold);font-size:12px;text-shadow:0 0 7px var(--gold)}
 .ent b{font:600 14px 'Newsreader',Georgia,serif;letter-spacing:0}
@@ -109,13 +109,13 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font
 dt{color:var(--muted)}dd{text-align:right}
 .sim{margin-top:10px;color:var(--muted);font-size:13px}
 .video-wrap{position:relative;margin:16px 0 12px;border-radius:12px;overflow:hidden;background:#06172b;border:1px solid rgba(159,180,211,.25);aspect-ratio:16/9}
-.video-poster{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;height:100%;padding:24px 16px;background:linear-gradient(165deg,#0a2540 0%,#06172b 45%,#04101f 100%);border:0;cursor:pointer;color:var(--ink);text-align:center;transition:opacity .45s ease,visibility .45s ease}
+.video-poster{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;height:100%;padding:10px 12px;background:linear-gradient(165deg,#0a2540 0%,#06172b 45%,#04101f 100%);border:0;cursor:pointer;color:var(--ink);text-align:center;transition:opacity .45s ease,visibility .45s ease}
 .video-poster:hover{background:linear-gradient(165deg,#0d2f4f 0%,#071c30 45%,#04101f 100%)}
 .video-poster.is-fading{opacity:0;visibility:hidden;pointer-events:none}
-.video-logo{width:auto;max-width:min(46%,220px);max-height:80px;margin-bottom:2px;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)}
+.video-logo{width:auto;max-width:min(36%,180px);max-height:52px;margin-bottom:0;object-fit:contain;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)}
 .video-title{font:600 18px/1.25 'Newsreader',Georgia,serif;color:#fff}
 .video-sub{font-size:13px;color:var(--muted);letter-spacing:.03em}
-.video-play{margin-top:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:56px;height:56px;border-radius:50%;background:var(--red);color:#fff;font-size:20px;box-shadow:0 4px 18px rgba(200,16,46,.45);transition:transform .2s ease,background .2s ease}
+.video-play{flex:none;margin-top:2px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-size:18px;box-shadow:0 4px 18px rgba(200,16,46,.45);transition:transform .2s ease,background .2s ease}
 .video-poster:hover .video-play{transform:scale(1.08);background:var(--red2)}
 .video-play-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .video-frame{position:absolute;inset:0;opacity:0;transition:opacity .45s ease .1s}
