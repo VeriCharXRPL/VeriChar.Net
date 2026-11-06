@@ -20,16 +20,16 @@
 <meta property="og:title" content="VeriChar — Verifiable charity on chain | XRPL charity infrastructure">
 <meta property="og:description" content="VeriChar is verifiable charity on chain. Proof before payment. XRPL charity infrastructure for transparent, auditable charitable giving and on-chain charity funding.">
 <meta property="og:url" content="https://verichar.net/">
-<meta property="og:image" content="https://verichar.net/assets/logo-hero.png">
+<meta property="og:image" content="https://verichar.net/assets/logo-hero-recolored.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@VeriCharOnChain">
 <meta name="twitter:creator" content="@VeriCharOnChain">
 <meta name="twitter:title" content="VeriChar — Verifiable charity on chain | XRPL charity infrastructure">
 <meta name="twitter:description" content="Verifiable charity on chain. Proof before payment. XRPL charity infrastructure for transparent, auditable charitable giving.">
-<meta name="twitter:image" content="https://verichar.net/assets/logo-hero.png">
+<meta name="twitter:image" content="https://verichar.net/assets/logo-hero-recolored.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://verichar.net/#organization","name":"VeriChar","alternateName":["Verified Charity On-Chain","VeriChar.Net"],"url":"https://verichar.net/","logo":"https://verichar.net/assets/logo-hero.png","email":"VeriChar@proton.me","sameAs":["https://x.com/VeriCharOnChain"]},{"@type":"WebSite","@id":"https://verichar.net/#website","url":"https://verichar.net/","name":"VeriChar","publisher":{"@id":"https://verichar.net/#organization"},"potentialAction":{"@type":"SearchAction","target":"https://verichar.net/?q={search_term_string}","query-input":"required name=search_term_string"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://verichar.net/#organization","name":"VeriChar","alternateName":["Verified Charity On-Chain","VeriChar.Net"],"url":"https://verichar.net/","logo":"https://verichar.net/assets/logo-hero-recolored.png","email":"VeriChar@proton.me","sameAs":["https://x.com/VeriCharOnChain"]},{"@type":"WebSite","@id":"https://verichar.net/#website","url":"https://verichar.net/","name":"VeriChar","publisher":{"@id":"https://verichar.net/#organization"},"potentialAction":{"@type":"SearchAction","target":"https://verichar.net/?q={search_term_string}","query-input":"required name=search_term_string"}}]}
 </script>
 <meta name="theme-color" content="#0a2540">
 <link rel="canonical" href="https://verichar.net/">
@@ -117,6 +117,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font
 dt{color:var(--muted)}dd{text-align:right}
 .sim{margin-top:10px;color:var(--muted);font-size:13px}
 .video-wrap{position:relative;margin:16px 0 12px;border-radius:12px;overflow:hidden;background:#06172b;border:1px solid rgba(159,180,211,.25);aspect-ratio:16/9}
+.what-video{display:block;width:100%;height:100%;object-fit:contain;background:#06172b}
 .video-poster{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;height:100%;padding:10px 12px;background:linear-gradient(165deg,#0a2540 0%,#06172b 45%,#04101f 100%);border:0;cursor:pointer;color:var(--ink);text-align:center;transition:opacity .45s ease,visibility .45s ease}
 .video-poster:hover{background:linear-gradient(165deg,#0d2f4f 0%,#071c30 45%,#04101f 100%)}
 .video-poster.is-fading{opacity:0;visibility:hidden;pointer-events:none}
@@ -136,6 +137,7 @@ footer{padding:8px 12px 10px;text-align:center;color:var(--muted);font-size:12px
 .footer-actions{display:flex;width:min(100%,430px);gap:8px;margin:0 auto 6px}
 .footer-actions>*{flex:1 1 0;min-width:0;padding:9px 8px;font-size:clamp(12px,3.8vw,15px)}
 .footer-actions .ghost{color:var(--ink)}
+.footer-logo{display:block;width:min(100%,170px);height:72px;object-fit:contain;margin:0 auto 6px}
 footer a{color:var(--teal);text-decoration:none}
 footer a:hover{text-decoration:underline}
 #apiStatus{display:block;margin-top:4px}
@@ -193,7 +195,7 @@ td:nth-child(2),th:nth-child(2){text-align:right}
 </nav>
 <main>
   <section class="view hero" id="home">
-   <img src="assets/logo-hero.png" alt="VeriChar.net">
+  <img src="assets/logo-hero-recolored.png" alt="VeriChar.net">
    <p class="tag">Verifiable charity infrastructure</p>
    <h1>Proof-first giving, designed for trust and auditability.</h1>
    <p class="sub">Conditional escrow, public verification trails, and release rules that require both invoice and proof of delivery before funds can move.</p>
@@ -208,14 +210,14 @@ td:nth-child(2),th:nth-child(2){text-align:right}
     <p class="sim"><strong>Simulation only.</strong> No wallet, XRPL transaction, charity verification, proof upload, or payment occurs.</p>
    </div>
   </section>
-  <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p><b>Brianne Salato is the founder and product architect of VeriChar.</b> She is building practical XRPL infrastructure for accountable charitable giving, with a focus on clear fund flows, defined release conditions, and evidence that can be reviewed.</p><p>VeriChar is a hands-on, founder-led project grounded in a straightforward principle: the software should make its rules visible and its limits clear.</p><p>The public experience is a simulation, while Testnet work exercises the ledger flows. The project is being built transparently, one verifiable step at a time.</p></div></section>
-  <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>VeriChar is verifiable charity on chain.</b> We are creating infrastructure for transparent, audit-ready giving that can be verified on the public ledger.</p><p><b>Proof before payment.</b> Funds are itemized, locked, and released only after the required invoice and delivery proof are validated.</p><p><b>Public accountability.</b> The release path remains visible and auditable, not hidden behind opaque internal controls.</p></div></section>
+  <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>Traditional donations often disappear into a black box. Large sums leave the donor’s hands, yet almost no one can see exactly how, when, or whether those funds were used for their intended purpose. Annual reports arrive later. By then the trail is already gone.</p><p>We built VeriChar because accountability should not be an afterthought. It should be written into the ledger itself.</p><p>Large organizations sometimes treat philanthropy as a public-relations exercise. Conditional escrows change that. The platform does not ask anyone to trust a promise. It locks the funds until the charity hits a verified milestone. Both sides are protected: the organization only releases money when the work is done, and the charity can show clear, public proof that it was done.</p><p>Too much donated money is lost to intermediary fees, administration, and compliance overhead. By removing the middleman custodian entirely, more of every dollar can reach the ground.</p><p>Brianne Salato founded and architects VeriChar. She had no background in finance, crypto, XRPL, geopolitics, or software. She kept following the same pattern until the truth was unavoidable: the problem was not generosity. The problem was the exploitation of it. The need was as real as the charities it serves. She built this because the answer was clear—code must enforce integrity where trust has failed.</p><p>VeriChar is a hands-on, founder-led project. The software should make its rules visible and its limits clear. The public experience is a simulation, while Testnet work exercises the ledger flows. The project is being built transparently, one verifiable step at a time.</p></div></section>
+  <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>VeriChar is verifiable charity on chain.</b> We are creating infrastructure for transparent, audit-ready giving that can be verified on the public ledger.</p><p><b>Proof before payment.</b> Funds are itemized, locked, and released only after the required invoice and delivery proof are validated.</p><p><b>Public accountability.</b> The release path remains visible and auditable, not hidden behind opaque internal controls.</p><div class="video-wrap"><video class="what-video" controls preload="metadata" playsinline aria-label="VeriChar product flow"><source src="assets/verichar_flow_final.mp4" type="video/mp4">Your browser does not support HTML video.</video></div></div></section>
   <section class="view" id="why" hidden>
    <div class="card">
     <h2>Why Ripple &amp; XRPL</h2>
     <div class="video-wrap" id="bgVideo">
      <button type="button" class="video-poster" id="bgPlay" aria-label="Play Brad Garlinghouse video">
-      <img src="assets/logo-hero.png" alt="" class="video-logo" width="220" height="80">
+      <img src="assets/logo-hero-recolored.png" alt="" class="video-logo" width="220" height="80">
       <span class="video-title">Why XRPL</span>
       <span class="video-sub">Brad Garlinghouse explains XRP / XRPL · CNN</span>
       <span class="video-play" aria-hidden="true">▶</span>
@@ -281,6 +283,7 @@ td:nth-child(2),th:nth-child(2){text-align:right}
   </section>
 </main>
 <footer>
+  <img class="footer-logo" src="assets/logo-hero-recolored.png" alt="VeriChar.Net">
   <div class="footer-actions" aria-label="Primary actions">
    <button class="cta" data-go="demo">View the simulation</button>
    <a class="ghost" href="https://xrpscan.com/account/rBrwJxEff3gEiL2cTFRVDyJ6jJxLpJZqiU" target="_blank" rel="noopener noreferrer">Support VeriChar</a>

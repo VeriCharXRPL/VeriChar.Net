@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo-hero-recolored.png" alt="VeriChar.Net" width="220"></p>
+
 # VeriChar security protocols
 
 Operational checklist for the XRP Ledger design and for Illinois, before any real value moves.

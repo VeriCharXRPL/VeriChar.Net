@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo-hero-recolored.png" alt="VeriChar.Net" width="220"></p>
+
 # VeriChar Whitepaper
 
 **Verifiable giving on the XRP Ledger**  
