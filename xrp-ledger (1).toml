@@ -3,15 +3,11 @@
 # After creating an account, set Domain to verichar.net on-ledger and list the address below.
 
 [METADATA]
+version = 1
 modified = "2026-10-22T00:00:00.000Z"
 
-[[ACCOUNTS]]
-# address = "rXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-# network = "main"
-# desc = "VeriChar platform / operations account"
-
-[[VALIDATORS]]
-# none operated by VeriChar today
+# Add an [[ACCOUNTS]] entry for each account associated with this domain.
+# VeriChar does not operate validators.
 
 [PRINCIPALS]
 name = "Brianne Salato"

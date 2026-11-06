@@ -32,6 +32,21 @@ describe('config assertTestnetUrl', () => {
       );
     });
 
+    it('accepts the restricted application-review scope', () => {
+      assert.deepEqual(
+        readApiTokens(JSON.stringify([{
+          keyHash: 'b'.repeat(64),
+          tenantId: 'internal-reviewer',
+          scopes: ['applications:review'],
+        }])),
+        [{
+          keyHash: 'b'.repeat(64),
+          tenantId: 'internal-reviewer',
+          scopes: ['applications:review'],
+        }]
+      );
+    });
+
     describe('config readApiCorsOrigins', () => {
       it('accepts exact HTTPS origins and localhost development origins', () => {
         assert.deepEqual(

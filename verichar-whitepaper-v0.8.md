@@ -6,6 +6,8 @@
 **Brianne Salato**  
 Founder and Product Architect
 
+Brianne Salato founded VeriChar to develop practical XRPL infrastructure for accountable charitable giving. Her work focuses on clear fund flows, defined release conditions, and evidence that can be reviewed. VeriChar is a working prototype, and this paper distinguishes the intended model from what is currently live.
+
 **Version 0.8 (Draft)** · 5 November 2026  
 [verichar.net](https://verichar.net) · [VeriChar@proton.me](mailto:VeriChar@proton.me) · X: [@VeriCharOnChain](https://x.com/VeriCharOnChain)
 

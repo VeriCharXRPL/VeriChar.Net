@@ -4,8 +4,8 @@ const { convertStringToHex } = require('xrpl');
 const { connectClient, fundWallet } = require('./client');
 
 /**
- * Public EIN credential stack for charity / vendor / enterprise verification.
- * Only public data (EIN string) is stored on-chain.
+ * Testnet exercise for a VeriChar-defined organization-review credential.
+ * XRPL records issuer claims; it does not verify IRS status or issuer authority.
  * Follows exact shapes from:
  * - https://xrpl.org/docs/references/protocol/transactions/types/credentialcreate
  * - https://xrpl.org/docs/references/protocol/transactions/types/credentialaccept
@@ -16,70 +16,77 @@ const { connectClient, fundWallet } = require('./client');
  */
 
 const LSF_ACCEPTED = 0x00010000;
+const CREDENTIAL_TYPE = convertStringToHex('VERICHAR_ORGANIZATION_REVIEW_V1').toUpperCase();
 
 /**
- * Issue a public EIN credential.
+ * Issue an organization-review credential. Review evidence remains off-ledger.
  * @param {import('xrpl').Client} client
- * @param {import('xrpl').Wallet} issuerWallet - government or trusted third-party
+ * @param {import('xrpl').Wallet} issuerWallet - issuer of the assertion
  * @param {string} subjectAddress - charity / vendor / enterprise account
- * @param {string} ein - public EIN string, e.g. "EIN-12-3456789"
  * @returns {Promise<import('xrpl').SubmitResponse>}
  */
-async function issueEinCredential(client, issuerWallet, subjectAddress, ein) {
-  const credentialType = convertStringToHex(ein).toUpperCase();
+async function issueOrganizationCredential(client, issuerWallet, subjectAddress) {
   const tx = {
     TransactionType: 'CredentialCreate',
     Account: issuerWallet.address,
     Subject: subjectAddress,
-    CredentialType: credentialType,
+    CredentialType: CREDENTIAL_TYPE,
   };
   return client.submitAndWait(tx, { wallet: issuerWallet, autofill: true });
 }
 
 /**
- * Accept a public EIN credential (must be sent by the subject).
+ * Accept the credential (must be sent by the subject).
  * @param {import('xrpl').Client} client
  * @param {import('xrpl').Wallet} subjectWallet
  * @param {string} issuerAddress
- * @param {string} ein
  * @returns {Promise<import('xrpl').SubmitResponse>}
  */
-async function acceptEinCredential(client, subjectWallet, issuerAddress, ein) {
-  const credentialType = convertStringToHex(ein).toUpperCase();
+async function acceptOrganizationCredential(client, subjectWallet, issuerAddress) {
   const tx = {
     TransactionType: 'CredentialAccept',
     Account: subjectWallet.address,
     Issuer: issuerAddress,
-    CredentialType: credentialType,
+    CredentialType: CREDENTIAL_TYPE,
   };
   return client.submitAndWait(tx, { wallet: subjectWallet, autofill: true });
 }
 
 /**
- * Verify a public EIN credential exists, is accepted, and is not expired.
+ * Verify a credential exists, is accepted, and is not expired.
  * @param {import('xrpl').Client} client
  * @param {string} subjectAddress
  * @param {string} issuerAddress
- * @param {string} ein
  * @returns {Promise<{ valid: boolean, credential: object | null }>}
  */
-async function verifyEinCredential(client, subjectAddress, issuerAddress, ein) {
-  const credentialType = convertStringToHex(ein).toUpperCase();
+async function verifyOrganizationCredential(client, subjectAddress, issuerAddress) {
   try {
     const response = await client.request({
       command: 'ledger_entry',
       credential: {
         subject: subjectAddress,
         issuer: issuerAddress,
-        credential_type: credentialType,
+        credential_type: CREDENTIAL_TYPE,
       },
       ledger_index: 'validated',
     });
     const credential = response.result.node;
     const accepted = !!(credential.Flags & LSF_ACCEPTED);
-    const expired = credential.Expiration
-      ? (await client.getLedgerIndex()) > credential.Expiration
-      : false;
+    let expired = false;
+    if (credential.Expiration !== undefined) {
+      if (!Number.isSafeInteger(credential.Expiration)) {
+        throw new Error('Credential expiration is invalid.');
+      }
+      const ledgerResponse = await client.request({
+        command: 'ledger',
+        ledger_index: 'validated',
+      });
+      const closeTime = ledgerResponse.result?.ledger?.close_time;
+      if (!Number.isSafeInteger(closeTime)) {
+        throw new Error('Could not read validated ledger close time.');
+      }
+      expired = closeTime > credential.Expiration;
+    }
     return {
       valid: accepted && !expired,
       credential,
@@ -93,15 +100,13 @@ async function verifyEinCredential(client, subjectAddress, issuerAddress, ein) {
 }
 
 /**
- * Create a Permissioned Domain that accepts the public EIN credential.
+ * Create a Permissioned Domain that accepts the organization-review credential.
  * @param {import('xrpl').Client} client
  * @param {import('xrpl').Wallet} ownerWallet
  * @param {string} issuerAddress
- * @param {string} ein
  * @returns {Promise<{ result: import('xrpl').SubmitResponse, domainID: string | null }>}
  */
-async function createEinPermissionedDomain(client, ownerWallet, issuerAddress, ein) {
-  const credentialType = convertStringToHex(ein).toUpperCase();
+async function createOrganizationPermissionedDomain(client, ownerWallet, issuerAddress) {
   const tx = {
     TransactionType: 'PermissionedDomainSet',
     Account: ownerWallet.address,
@@ -109,7 +114,7 @@ async function createEinPermissionedDomain(client, ownerWallet, issuerAddress, e
       {
         Credential: {
           Issuer: issuerAddress,
-          CredentialType: credentialType,
+          CredentialType: CREDENTIAL_TYPE,
         },
       },
     ],
@@ -129,53 +134,48 @@ async function createEinPermissionedDomain(client, ownerWallet, issuerAddress, e
 /**
  * Full end-to-end Testnet flow: fund, issue, accept, verify, create domain.
  * Used for CI / local validation. Does not open product gates.
- * @param {string} ein
  * @returns {Promise<object>}
  */
-async function runEinCredentialFlow(ein = 'EIN-12-3456789') {
+async function runOrganizationCredentialFlow() {
   const client = await connectClient();
   try {
     const { wallet: issuerWallet } = await fundWallet(client);
     const { wallet: subjectWallet } = await fundWallet(client);
 
-    const createResult = await issueEinCredential(
+    const createResult = await issueOrganizationCredential(
       client,
       issuerWallet,
-      subjectWallet.address,
-      ein
+      subjectWallet.address
     );
     if (createResult.result.meta.TransactionResult !== 'tesSUCCESS') {
       throw new Error('CredentialCreate failed');
     }
 
-    const acceptResult = await acceptEinCredential(
+    const acceptResult = await acceptOrganizationCredential(
       client,
       subjectWallet,
-      issuerWallet.address,
-      ein
+      issuerWallet.address
     );
     if (acceptResult.result.meta.TransactionResult !== 'tesSUCCESS') {
       throw new Error('CredentialAccept failed');
     }
 
-    const verification = await verifyEinCredential(
+    const verification = await verifyOrganizationCredential(
       client,
       subjectWallet.address,
-      issuerWallet.address,
-      ein
+      issuerWallet.address
     );
 
-    const domain = await createEinPermissionedDomain(
+    const domain = await createOrganizationPermissionedDomain(
       client,
       issuerWallet,
-      issuerWallet.address,
-      ein
+      issuerWallet.address
     );
 
     return {
       issuer: issuerWallet.address,
       subject: subjectWallet.address,
-      ein,
+      credentialType: 'VERICHAR_ORGANIZATION_REVIEW_V1',
       valid: verification.valid,
       domainID: domain.domainID,
       createResult: createResult.result.meta.TransactionResult,
@@ -188,10 +188,10 @@ async function runEinCredentialFlow(ein = 'EIN-12-3456789') {
 }
 
 module.exports = {
-  issueEinCredential,
-  acceptEinCredential,
-  verifyEinCredential,
-  createEinPermissionedDomain,
-  runEinCredentialFlow,
+  issueOrganizationCredential,
+  acceptOrganizationCredential,
+  verifyOrganizationCredential,
+  createOrganizationPermissionedDomain,
+  runOrganizationCredentialFlow,
   LSF_ACCEPTED,
 };

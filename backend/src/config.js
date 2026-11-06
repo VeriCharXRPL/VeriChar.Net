@@ -52,7 +52,11 @@ const XRPL_WS_URL = assertTestnetUrl(
   process.env.XRPL_WS_URL || 'wss://s.altnet.rippletest.net:51233'
 );
 
-const API_SCOPES = new Set(['tenant:read', 'ledger:read']);
+const API_SCOPES = new Set([
+  'tenant:read',
+  'ledger:read',
+  'applications:review',
+]);
 
 function readApiTokens(value = process.env.API_TOKENS_JSON || '[]') {
   let records;

@@ -6,9 +6,8 @@
  * EscrowFinish: Fulfillment (held by oracle).
  * EscrowCancel: after CancelAfter.
  *
- * UNCONFIRMED (do not invent):
- * - Which account owns each escrow / who pays owner reserve
- * - Token/RLUSD escrow (needs issuer asfAllowTrustLineLocking)
+ * This helper creates XRP-only escrows. XRPL token escrow is a separate,
+ * amendment-enabled feature and is not implemented or tested here.
  */
 
 const { xrpl } = require('./client');
@@ -100,21 +99,24 @@ async function createConditionalEscrow(client, senderWallet, opts) {
 }
 
 /**
- * Minimum Fee for EscrowFinish with a fulfillment (drops).
- * Per xrpl.org EscrowFinish docs (reference fee 10 drops):
- *   330 drops + 10 drops for every 16 bytes of the fulfillment
- *   → 330 + 10 * floor(fulfillment_bytes / 16)
- * Example: 32-byte fulfillment → 350 drops.
- * Multi-signing adds cost on top (not implemented here).
- * Generalized signer_count form from transaction-cost page is UNVERIFIED here
- * relative to the explicit 330 + 10-per-16-bytes wording on the EscrowFinish page.
+ * Minimum single-signature EscrowFinish fee, scaled by the ledger reference fee.
+ * XRPL's formula is reference_fee * (33 + fulfillment_bytes / 16) when there
+ * are no additional signers.
  * @param {string} fulfillmentHex
+ * @param {string} [referenceFeeDrops='10']
  * @returns {string} fee in drops
  */
-function escrowFinishFeeDrops(fulfillmentHex) {
-  const bytes = Buffer.from(fulfillmentHex, 'hex').length;
-  const drops = 330 + 10 * Math.floor(bytes / 16);
-  return String(drops);
+function escrowFinishFeeDrops(fulfillmentHex, referenceFeeDrops = '10') {
+  if (typeof fulfillmentHex !== 'string' || !/^(?:[0-9a-f]{2})+$/i.test(fulfillmentHex)) {
+    throw new Error('fulfillmentHex must be non-empty, even-length hexadecimal.');
+  }
+  if (!/^\d+$/.test(String(referenceFeeDrops)) || BigInt(referenceFeeDrops) <= 0n) {
+    throw new Error('referenceFeeDrops must be a positive integer string.');
+  }
+
+  const fulfillmentBytes = BigInt(fulfillmentHex.length / 2);
+  const referenceFee = BigInt(referenceFeeDrops);
+  return (referenceFee * (33n + fulfillmentBytes / 16n)).toString();
 }
 
 /**
@@ -140,7 +142,9 @@ async function finishEscrow(client, finisherWallet, opts) {
     throw new Error('fulfillment does not match condition');
   }
 
-  const minFee = escrowFinishFeeDrops(fulfillment);
+  const feeResponse = await client.request({ command: 'fee' });
+  const referenceFeeDrops = feeResponse.result?.drops?.base_fee;
+  const minFee = escrowFinishFeeDrops(fulfillment, referenceFeeDrops);
 
   const tx = {
     TransactionType: 'EscrowFinish',

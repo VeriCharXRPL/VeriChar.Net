@@ -116,7 +116,8 @@ async function checkReserveRequirement(client, address, extraOwners = 0) {
  * Fund an account so it can cover base + owner reserves for planned objects.
  * Uses a Payment from a funded source wallet (e.g. faucet-funded).
  *
- * UNCONFIRMED: which account should own escrows / who pays reserves in production.
+ * The account that creates an escrow owns it and bears its owner reserve.
+ * Production account ownership and signing policy remain undecided.
  *
  * @param {xrpl.Client} client
  * @param {xrpl.Wallet} sourceWallet

@@ -120,9 +120,22 @@ describe('tenant-aware API', () => {
       },
       validatedLedger: 123,
     });
+
     assert.equal(ledgerRequests[0].command, 'account_info');
     assert.equal(ledgerRequests[0].ledger_index, 'validated');
     assert.equal(disconnects, 1);
+  });
+
+  it('does not expose a credential-transaction endpoint that accepts signing seeds', async () => {
+    const requestCount = ledgerRequests.length;
+    const response = await fetch(`${baseUrl}/v1/networks/testnet/credentials`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ signerSeed: 'testnet-only' }),
+    });
+    assert.equal(response.status, 405);
+    assert.deepEqual(await response.json(), { error: 'method_not_allowed' });
+    assert.equal(ledgerRequests.length, requestCount);
   });
 
   it('keeps Mainnet unavailable even for an authenticated tenant', async () => {

@@ -6,7 +6,9 @@ This document recommends an API-layer design for a multi-tenant SaaS that intera
 
 XRPL defines ledger networks, accounts, cryptographic transaction signing, consensus, and APIs for querying the ledger and submitting transactions. It does **not** define SaaS tenants, company authentication, tenant-level permissions, or isolation of an application's off-ledger data. Those responsibilities belong to this service.
 
-The current backend is Testnet-only. Its initial HTTP API foundation provides a public health check, token-bound tenant context, and authenticated Testnet account reads. The public site can call the health check only; it does not receive a bearer token, and its donation demo remains simulated. The backend does not yet provide persistent tenant-owned application data, transaction submission, OAuth, or Mainnet. Adding those capabilities requires explicit application and operational controls; they are not enabled merely by using XRPL addresses or signing transactions.
+The current backend is Testnet-only. It provides public health, token-bound tenant context, authenticated Testnet account reads, and a separate PostgreSQL-backed organization application/review workflow. The public site can submit applications and read the verified-charity directory; reviewer credentials are never embedded in the site. The donation demo remains simulated. No transaction-signing endpoint, persistent tenant-owned enterprise data, OAuth, or Mainnet access is enabled.
+
+`backend/src/organizationCredential.js` is a Testnet-only integration-test helper, not an API route. It exercises XRPL credential transactions using ephemeral faucet wallets and a generic public credential type. No EIN is written to the ledger. An accepted credential proves only that its issuer made an assertion; it does not establish IRS status or that the issuer is authoritative.
 
 ## Recommended API shape
 
@@ -29,7 +31,7 @@ Do not use an XRPL `api_version` value to indicate a tenant or network. That fie
 2. Bind each identity to a tenant using a trusted token claim such as `tid`. Include narrowly scoped permissions, for example `payments:read`, `payments:write`, and `network:mainnet`.
 3. Derive tenant context only from a verified identity. Do not accept `X-Tenant-ID` or a request-body tenant field as an authorization source.
 4. Grant Mainnet access separately and explicitly. A tenant authorized for Testnet must not implicitly be authorized for Mainnet.
-5. Apply role and scope checks to sensitive operations, including transaction submission, user administration, and credential management.
+5. Apply role and scope checks to sensitive operations, including transaction submission, user administration, and credential management. Current API tokens have read-only ledger scope; transaction-signing scopes are not enabled.
 
 If an administrative route includes a tenant ID in its path, verify that the authenticated identity is authorized for that tenant. For ordinary tenant-owned resources, prefer deriving the tenant from the token rather than requiring a caller-supplied tenant path.
 
@@ -87,3 +89,26 @@ These are product and architecture choices that cannot be settled by the XRPL pr
 - [Parallel networks](https://xrpl.org/docs/concepts/networks-and-servers/parallel-networks)
 - [Transactions](https://xrpl.org/docs/concepts/transactions)
 - [Secure signing](https://xrpl.org/docs/concepts/transactions/secure-signing)
+
+## Organization application and review workflow
+
+The initial workflow supports charity, vendor, and enterprise applications. Public endpoints are:
+
+```http
+POST /v1/applications
+GET  /v1/public/charities
+```
+
+Applications begin as `submitted`. An API token with the `applications:review` scope can list and inspect applications and move them through `in_review`, `verified`, and `rejected` using:
+
+```http
+GET  /v1/reviewer/applications
+GET  /v1/reviewer/applications/{id}
+POST /v1/reviewer/applications/{id}/status
+```
+
+Allowed transitions are `submitted → in_review`, `in_review → verified|rejected`, and `rejected|verified → in_review`. Every transition records the reviewer token's tenant identity. Only charities marked `verified` with explicit public-listing consent appear in the directory. Reviewers must check official qualification records and organization identity before approving a charity. The API does not perform an IRS lookup, establish 501(c)(3) status, or prove control of an XRPL account; those checks remain part of the manual review.
+
+Contact information and charity EINs are encrypted with AES-256-GCM before insertion. The encryption key is supplied as `APPLICATION_DATA_KEY` and must be kept separate from the database and backed up securely. The API limits request bodies, rejects non-HTTPS organization websites, and requires Cloudflare Turnstile for application intake. PostgreSQL schema setup is explicit: `cd backend && npm run db:migrate`.
+
+No donation or Xaman endpoints are enabled in this phase. The donor signing flow must be added only after the charity-account funding-to-conditional-escrow transition is demonstrable on Testnet; a payment to a charity account is not itself an escrow.

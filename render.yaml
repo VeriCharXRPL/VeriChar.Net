@@ -22,3 +22,11 @@ services:
         value: "[]"
       - key: API_CORS_ORIGINS
         value: '["https://verichar.net","https://www.verichar.net","https://verichar.vercel.app"]'
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      - key: APPLICATION_DATA_KEY
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false

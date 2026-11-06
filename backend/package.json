@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --test tests/*.js"
+    "test": "node --test tests/*.js",
+    "db:migrate": "node src/migrate.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
     "five-bells-condition": "^5.0.0",
+    "pg": "^8.23.1",
     "xrpl": "^4.2.3"
   }
 }

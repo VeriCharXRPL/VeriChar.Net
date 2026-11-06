@@ -16,14 +16,16 @@ Status today: **Testnet prototype.** The public site is a simulation. The API do
 | Browser is not given an API token; CORS is an exact origin list, never `*` | `backend/src/config.js`, `index.html` |
 | Conditional escrow is PREIMAGE-SHA-256 only | `backend/src/condition.js` |
 | Every escrow sets `CancelAfter` (Ripple epoch, not Unix) | `backend/src/escrow.js` |
-| `EscrowFinish` fee is at least the XRPL.org fulfillment formula | `backend/src/escrow.js` |
+| `EscrowFinish` fee scales the fulfillment cost by the current ledger reference fee | `backend/src/escrow.js` |
 | Fulfillment is not written to logs and is not returned to the public site | escrow module; public demo is simulated |
 | Count a transaction only if `validated: true` and `tesSUCCESS` | `backend/src/monitor.js` |
 | Reserves come from the validated ledger, never a hardcoded number | `backend/src/reserves.js` |
 | Full suite, including live Testnet escrow tests, runs on every push to `main` | `.github/workflows/backend-tests.yml` |
-| Public API refuses donations, charity verification, tax receipts, and ledger writes | `backend/src/compliance.js`, `backend/src/api.js` |
+| Public API refuses donations, charity verification, tax receipts, and general transaction submission; credential transactions are only exercised by local/CI Testnet code | `backend/src/compliance.js`, `backend/src/api.js`, `backend/src/organizationCredential.js` |
 
 Ledger behavior is taken from [XRPL.org escrow](https://xrpl.org/docs/concepts/payment-types/escrow) and the conditional-escrow tutorial. If this repo and XRPL.org disagree about the ledger, XRPL.org wins.
+
+The Testnet credential helper uses ephemeral faucet wallets and a generic public credential type. Do not put EINs or other private identifiers in `CredentialType`: XRPL credential fields are public, and an accepted credential only records an issuer's assertion. It does not verify IRS status or issuer authority.
 
 ## Required before real funds
 
@@ -37,7 +39,7 @@ Not done. Do not market these as live.
 
 ## Illinois gates
 
-VeriChar does **not** currently solicit or accept real charitable contributions, and it does **not** hold charitable property.
+The application does not process charitable contributions or hold charitable property. The homepage's “Support VeriChar” link opens the public Mainnet account in an XRPL explorer; it does not sign or submit a transaction, but it does expose an address that visitors could use to send XRP independently.
 
 Before that changes, Illinois counsel should confirm at least:
 
@@ -49,7 +51,7 @@ Before that changes, Illinois counsel should confirm at least:
 | Consumer claims | “Verified,” “proof,” and “tracked” must match what is actually live. | Illinois consumer-protection review with counsel |
 | Tax characterization | A donation **to VeriChar** is support for the company unless counsel says otherwise. It is not advertised as a deductible charitable gift. | Tax counsel; not determined by the website |
 
-The “Donate to VeriChar” control on the public site opens email. It does not take payment and it does not write a ledger transaction.
+The treatment, accounting, and solicitation implications of that direct account link have not been established. Keep it clearly distinguished from a tax-deductible charitable donation and have counsel review it before promoting it as a contribution path.
 
 ## Explicit non-claims
 

@@ -15,5 +15,5 @@ module.exports = {
   monitor: require('./monitor'),
   oracle: require('./oracle'),
   compliance: require('./compliance'),
-  einCredential: require('./einCredential'),
+  organizationCredential: require('./organizationCredential'),
 };

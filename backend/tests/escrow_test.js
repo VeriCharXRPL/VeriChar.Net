@@ -16,11 +16,13 @@ const {
 } = require('../src/monitor');
 
 describe('escrowFinishFeeDrops', () => {
-  it('matches xrpl.org formula: 330 + 10 * floor(bytes/16)', () => {
-    // 32 hex chars = 16 bytes → 330 + 10*1 = 340
+  it('scales the XRPL fulfillment fee with the reference fee', () => {
+    // At a 10-drop reference fee: 10 * (33 + floor(bytes / 16)).
     assert.equal(escrowFinishFeeDrops('A'.repeat(32)), '340');
-    // 64 hex chars = 32 bytes → 330 + 10*2 = 350
     assert.equal(escrowFinishFeeDrops('A'.repeat(64)), '350');
+    assert.equal(escrowFinishFeeDrops('A'.repeat(64), '20'), '700');
+    assert.throws(() => escrowFinishFeeDrops('not-hex'), /hexadecimal/);
+    assert.throws(() => escrowFinishFeeDrops('AA', '0'), /positive integer/);
   });
 });
 
