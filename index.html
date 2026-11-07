@@ -117,8 +117,8 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font
 dt{color:var(--muted)}dd{text-align:right}
 .sim{margin-top:10px;color:var(--muted);font-size:13px}
 .video-wrap{position:relative;margin:16px 0 12px;border-radius:12px;overflow:hidden;background:#06172b;border:1px solid rgba(159,180,211,.25);aspect-ratio:16/9}
-#what .video-wrap{aspect-ratio:auto}
-.what-video{display:block;width:100%;height:auto;object-fit:contain;background:#06172b}
+#what .video-wrap{aspect-ratio:16/9}
+.what-video{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.12);background:#06172b}
 .video-poster{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;height:100%;padding:10px 12px;background:linear-gradient(165deg,#0a2540 0%,#06172b 45%,#04101f 100%);border:0;cursor:pointer;color:var(--ink);text-align:center;transition:opacity .45s ease,visibility .45s ease}
 .video-poster:hover{background:linear-gradient(165deg,#0d2f4f 0%,#071c30 45%,#04101f 100%)}
 .video-poster.is-fading{opacity:0;visibility:hidden;pointer-events:none}
@@ -211,7 +211,21 @@ td:nth-child(2),th:nth-child(2){text-align:right}
    </div>
   </section>
   <section class="view" id="who" hidden><div class="card"><h2>Who we are</h2><p>Traditional donations often disappear into a black box. Large sums leave the donor’s hands, yet almost no one can see exactly how, when, or whether those funds were used for their intended purpose. Annual reports arrive later. By then the trail is already gone.</p><p>We built VeriChar because accountability should not be an afterthought. It should be written into the ledger itself.</p><p>Large organizations sometimes treat philanthropy as a public-relations exercise. Conditional escrows change that. The platform does not ask anyone to trust a promise. It locks the funds until the charity hits a verified milestone. Both sides are protected: the organization only releases money when the work is done, and the charity can show clear, public proof that it was done.</p><p>Too much donated money is lost to intermediary fees, administration, and compliance overhead. By removing the middleman custodian entirely, more of every dollar can reach the ground.</p><p>Brianne Salato founded and architects VeriChar. She had no background in finance, crypto, XRPL, geopolitics, or software. She kept following the same pattern until the truth was unavoidable: the problem was not generosity. The problem was the exploitation of it. The need was as real as the charities it serves. She built this because the answer was clear—code must enforce integrity where trust has failed.</p><p>VeriChar is a hands-on, founder-led project. The software should make its rules visible and its limits clear. The public experience is a simulation, while Testnet work exercises the ledger flows. The project is being built transparently, one verifiable step at a time.</p></div></section>
-  <section class="view" id="what" hidden><div class="card"><h2>What we are building</h2><p><b>VeriChar is verifiable charity on chain.</b> We are creating infrastructure for transparent, audit-ready giving that can be verified on the public ledger.</p><p><b>Proof before payment.</b> Funds are itemized, locked, and released only after the required invoice and delivery proof are validated.</p><p><b>Public accountability.</b> The release path remains visible and auditable, not hidden behind opaque internal controls.</p><div class="video-wrap"><video class="what-video" controls preload="metadata" playsinline aria-label="VeriChar product flow"><source src="assets/verichar_flow_final.mp4" type="video/mp4">Your browser does not support HTML video.</video></div></div></section>
+  <section class="view" id="what" hidden>
+   <div class="card">
+    <h2>What we are building</h2>
+    <div class="video-wrap"><video class="what-video" controls preload="metadata" playsinline aria-label="VeriChar product flow"><source src="assets/verichar_flow_final.mp4" type="video/mp4">Your browser does not support HTML video.</video></div>
+    <p>VeriChar is building charitable funding infrastructure where accountability is part of the payment rules, not an after-the-fact report. Each need is tied to a clear amount, a named vendor, and conditions that are defined before funds move.</p>
+    <h3>How the flow works</h3>
+    <ol>
+     <li><b>A need is itemized.</b> The charity describes what is needed, how much it costs, and which vendor will provide it.</li>
+     <li><b>Funds are locked to the purpose.</b> Conditional XRPL escrow fixes the vendor as the destination, rather than giving the charity unrestricted custody of the funds.</li>
+     <li><b>Evidence is reviewed before release.</b> An authorized reviewer checks both the itemized invoice and proof of delivery. The matching cryptographic fulfillment is required to finish the escrow.</li>
+     <li><b>The settlement is public.</b> XRPL records the escrow transactions and settlement. The invoice and delivery evidence remain off-chain; the ledger records the transaction, but does not independently prove that goods arrived.</li>
+    </ol>
+    <p><b>Where we are today.</b> The public site is a simulation, and the escrow lifecycle is exercised on XRPL Testnet. No real donations or Mainnet funds are handled. Application review is not IRS certification.</p>
+   </div>
+  </section>
   <section class="view" id="why" hidden>
    <div class="card">
     <h2>Why Ripple &amp; XRPL</h2>
