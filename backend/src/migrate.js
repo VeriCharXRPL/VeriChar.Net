@@ -16,12 +16,15 @@ async function main() {
   });
 
   try {
-    const migration = await fs.readFile(
-      path.join(__dirname, '..', 'migrations', '001_applications.sql'),
-      'utf8'
-    );
-    await pool.query(migration);
-    console.log('Database migration 001_applications.sql applied.');
+    const migrationsDirectory = path.join(__dirname, '..', 'migrations');
+    const migrationFiles = (await fs.readdir(migrationsDirectory))
+      .filter((file) => file.endsWith('.sql'))
+      .sort();
+    for (const migrationFile of migrationFiles) {
+      const migration = await fs.readFile(path.join(migrationsDirectory, migrationFile), 'utf8');
+      await pool.query(migration);
+      console.log(`Database migration ${migrationFile} applied.`);
+    }
   } finally {
     await pool.end();
   }

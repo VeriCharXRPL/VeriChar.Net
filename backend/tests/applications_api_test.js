@@ -24,6 +24,7 @@ describe('organization application API', () => {
   let baseUrl;
   let storedApplication;
   let reviewedStatus;
+  let lookedUpEin;
   let challengeValid;
   const publicCharities = [{
     id: randomUUID(),
@@ -65,6 +66,21 @@ describe('organization application API', () => {
         listPublicCharities: async () => publicCharities,
         listForReview: async () => storedApplication ? [storedApplication] : [],
         getForReview: async (id) => id === storedApplication?.id ? storedApplication : null,
+        getIrsEoBmfRecordByEin: async (ein) => {
+          lookedUpEin = ein;
+          return {
+            source: 'IRS EO BMF',
+            status: 'candidate_501c3',
+            checkedAt: '2026-11-06T00:00:00.000Z',
+            record: {
+              name: 'Community Aid',
+              state: 'NY',
+              subsectionCode: '03',
+              deductibilityCode: '1',
+              sourceRegion: '1',
+            },
+          };
+        },
         review: async (id, status, reviewerId, publicProfile) => {
           if (id !== storedApplication?.id) return null;
           reviewedStatus = { id, status, reviewerId, publicProfile };
@@ -166,6 +182,25 @@ describe('organization application API', () => {
     assert.equal(application.name, 'Community Aid');
     assert.equal(application.privateData.taxId, '123456789');
     assert.equal(application.privateData.contactEmail, 'contact@example.org');
+  });
+
+  it('limits IRS record matches to reviewers and never returns the EIN', async () => {
+    const url = `${baseUrl}/v1/reviewer/applications/${storedApplication.id}/irs-status`;
+    const denied = await fetch(url, {
+      headers: { authorization: `Bearer ${tenantToken}` },
+    });
+    assert.equal(denied.status, 403);
+
+    const response = await fetch(url, {
+      headers: { authorization: `Bearer ${reviewerToken}` },
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(lookedUpEin, '123456789');
+    assert.equal(result.irsRecord.status, 'candidate_501c3');
+    assert.equal(result.irsRecord.record.name, 'Community Aid');
+    assert.equal(JSON.stringify(result).includes('123456789'), false);
+    assert.equal(storedApplication.status, 'submitted');
   });
 
   it('records reviewer identity when an application status changes', async () => {

@@ -1,6 +1,7 @@
 'use strict';
 
 const { Pool } = require('pg');
+const { normalizeEin } = require('./irsRegistry');
 
 function createApplicationStore({ pool } = {}) {
   let connectionPool = pool;
@@ -22,6 +23,44 @@ function createApplicationStore({ pool } = {}) {
   }
 
   return {
+    async getIrsEoBmfRecordByEin(ein) {
+      const normalizedEin = normalizeEin(ein);
+      const { rows } = await getPool().query(
+        `SELECT record.organization_name, record.state, record.subsection_code,
+                record.deductibility_code, record.source_region, sync.fetched_at
+         FROM irs_eo_bmf_records AS record
+         JOIN irs_eo_bmf_sync_runs AS sync ON sync.id = record.sync_id
+         WHERE record.ein = $1`,
+        [normalizedEin]
+      );
+      if (rows[0]) {
+        const record = rows[0];
+        return {
+          source: 'IRS EO BMF',
+          status: record.subsection_code === '03' ? 'candidate_501c3' : 'different_subsection',
+          checkedAt: record.fetched_at,
+          record: {
+            name: record.organization_name,
+            state: record.state,
+            subsectionCode: record.subsection_code,
+            deductibilityCode: record.deductibility_code,
+            sourceRegion: record.source_region,
+          },
+        };
+      }
+
+      const latestSync = await getPool().query(
+        `SELECT fetched_at FROM irs_eo_bmf_sync_runs
+         ORDER BY fetched_at DESC LIMIT 1`
+      );
+      return {
+        source: 'IRS EO BMF',
+        status: latestSync.rows[0] ? 'not_found_in_dataset' : 'dataset_not_loaded',
+        checkedAt: latestSync.rows[0]?.fetched_at || null,
+        record: null,
+      };
+    },
+
     async create(application, encryptedPrivateData) {
       const { rows } = await getPool().query(
         `INSERT INTO applications (

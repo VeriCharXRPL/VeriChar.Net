@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test tests/*.js",
-    "db:migrate": "node src/migrate.js"
+    "db:migrate": "node src/migrate.js",
+    "irs:sync": "node src/syncIrsRegistry.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

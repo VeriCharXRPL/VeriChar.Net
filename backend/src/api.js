@@ -272,6 +272,35 @@ function createApiServer({
       }
     }
 
+    const reviewerIrsStatusRoute = new RegExp(
+      `^/v1/reviewer/applications/(${uuidPattern})/irs-status$`,
+      'i'
+    ).exec(url.pathname);
+    if (request.method === 'GET' && reviewerIrsStatusRoute) {
+      const principal = authenticate(request, tokenRecords);
+      if (!principal) return sendJson(response, 401, { error: 'unauthorized' });
+      if (!principal.scopes.includes('applications:review')) {
+        return sendJson(response, 403, { error: 'insufficient_scope' });
+      }
+
+      try {
+        const application = await applicationStore.getForReview(reviewerIrsStatusRoute[1]);
+        if (!application) return sendJson(response, 404, { error: 'application_not_found' });
+        if (application.kind !== 'charity') {
+          return sendJson(response, 409, { error: 'not_a_charity_application' });
+        }
+        const privateData = decryptPrivateData(
+          application,
+          getApplicationDataKey(applicationDataKey)
+        );
+        const irsRecord = await applicationStore.getIrsEoBmfRecordByEin(privateData.taxId);
+        return sendJson(response, 200, { applicationId: application.id, irsRecord });
+      } catch {
+        console.error('Reviewer IRS record lookup failed.');
+        return sendJson(response, 503, { error: 'application_service_unavailable' });
+      }
+    }
+
     const door = productDoor(url.pathname, request.method);
     if (door) {
       return refuseProductDoor(response, door);
