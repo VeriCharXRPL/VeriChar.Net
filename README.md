@@ -55,6 +55,10 @@ Application records use PostgreSQL. Contact details, organization name, EIN, web
 
 Reviewer API tokens must include only the `applications:review` scope where possible. Create a high-entropy token with `openssl rand -hex 32`, store only its SHA-256 hash in `API_TOKENS_JSON`, and deliver the token to the invited reviewer through a separate secure channel. The current workflow does not accept donations or create Xaman signing requests; those remain closed while the Testnet custody and escrow lifecycle is built and verified.
 
+## License
+
+Licensed under either of MIT ([LICENSE-MIT](LICENSE-MIT)) or Apache License 2.0 ([LICENSE-APACHE](LICENSE-APACHE)), at your option.
+
 ## Links
 
 - Site: [verichar.net](https://verichar.net)
