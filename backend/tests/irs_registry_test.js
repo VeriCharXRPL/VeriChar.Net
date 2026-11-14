@@ -48,7 +48,7 @@ describe('IRS EO BMF feed parsing', () => {
   it('rejects feeds missing required IRS columns or malformed rows', async () => {
     await assert.rejects(
       parseEoBmfCsv(
-        Readable.from(['EIN,NAME\n010019116,Community']),
+        Readable.from([Buffer.from('EIN,NAME\n010019116,Community')]),
         '1',
         async () => {}
       ),
@@ -56,7 +56,7 @@ describe('IRS EO BMF feed parsing', () => {
     );
     await assert.rejects(
       parseEoBmfCsv(
-        Readable.from(['EIN,NAME,STATE,SUBSECTION,DEDUCTIBILITY\n123,Community,NY,03,1']),
+        Readable.from([Buffer.from('EIN,NAME,STATE,SUBSECTION,DEDUCTIBILITY\n123,Community,NY,03,1')]),
         '1',
         async () => {}
       ),

@@ -80,7 +80,9 @@ async function* readCsvRecords(body, onChunk = () => {}) {
 
   for await (const chunk of body) {
     onChunk(chunk);
-    pending += decoder.decode(chunk, { stream: true });
+    pending += typeof chunk === 'string'
+      ? chunk
+      : decoder.decode(chunk, { stream: true });
     let newlineIndex = pending.indexOf('\n');
     while (newlineIndex !== -1) {
       const line = pending.slice(0, newlineIndex).replace(/\r$/, '');
