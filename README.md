@@ -57,7 +57,7 @@ Reviewer API tokens must include only the `applications:review` scope where poss
 
 ## License
 
-Licensed under either of MIT ([LICENSE-MIT](LICENSE-MIT)) or Apache License 2.0 ([LICENSE-APACHE](LICENSE-APACHE)), at your option.
+Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 
 ## Links
 
